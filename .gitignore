@@ -1,0 +1,48 @@
+.DS_Store
+__pycache__/
+*.pyc
+~$*
+.*
+!.gitignore
+
+# Local / publish scratch (not part of the site)
+.confluence-*
+.mcp-*
+.hub-*
+.invoke*
+.invoke_*
+.stdout-*
+.final_*
+.publish-*
+.restore-*
+.body*
+._body*
+*_body*
+page_body*
+page_v19.json
+modified_body.html
+mcp_*.json
+mcp_*.py
+mcp_*.txt
+call_mcp*.py
+edit_confluence.py
+invoke_mcp*.py
+publish_hub_mcp.py
+run_confluence_update.py
+save_mcp_body.py
+tmp_confluence*.py
+update_hub_james.py
+update_payload.json
+write_body_chunks.py
+
+# Field guide snapshot (large, separate host)
+Designer's Guide to P&S*
+Resources/
+
+# Unused brand assets for this page
+assets/ps-brand.css
+assets/journey-ui/
+
+# Other local docs (not published with persona page)
+aug4-scope-matrix.*
+ps-existing-journey-map.*

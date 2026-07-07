@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P&amp;S Persona Journey Flows</title>
+  <link rel="stylesheet" href="assets/ps-persona-journey.css" />
+</head>
+<body class="pj-doc">
+  <header class="pj-topbar">
+    <span class="eyebrow">PSET · Persona journeys</span>
+    <span class="issue">Field Guide · 2026</span>
+  </header>
+  <main class="pj-shell">
+    <div class="pj-page-header">
+      <h1>P&amp;S Persona Journey Flows</h1>
+      <div class="pj-meta-row">
+        <span class="pj-badge">Field Guide · 2026</span>
+        <span class="pj-badge">manage.autodesk.com/products</span>
+      </div>
+      <p class="subtitle">Current-state fulfillment at manage.autodesk.com/products — three personas, product-type branch at step 3.</p>
+    </div>
+    <div class="pj-card">
+      <div class="pj-tabs" id="tabs"></div>
+      <div id="panels"></div>
+    </div>
+    <div class="pj-legend">
+      <span><i class="pj-swatch pj-swatch-persona"></i> Persona</span>
+      <span><i class="pj-swatch pj-swatch-jtbd"></i> JTBD</span>
+      <span><i class="pj-swatch pj-swatch-mental"></i> Mental state</span>
+      <span><i class="pj-swatch pj-swatch-pain"></i> Pain point</span>
+      <span>Cloud/collab = product-type branch (not a separate persona)</span>
+    </div>
+    <p class="pj-footer">Autodesk internal · PSET Experience Design · <a class="pj-link" href="ps-existing-journey-map.html">Journey map</a> · <a class="pj-link" href="aug4-scope-matrix.html">Scope matrix</a></p>
+  </main>
+
+  <script>
+    const PERSONAS = [
+      {
+        id: "single-seat",
+        label: "Single-seat / end user",
+        persona: "Solo professional or team-assigned end user (includes new buyers and former “Coordinator” / CAD manager roles). Not the subscription owner or IT deployer.",
+        jtbd: "When I need to use Autodesk software, I want to find my product and install it quickly — so I can start working without calling support or guessing what I'm allowed to do on this page.",
+        note: "Who on P&S: installs on their own machine. Same core flow as Primary Admin, but optimizes for speed — often skips View details. Managing seats for others happens in UMA, not here. After step 3, path splits by product type: desktop install vs cloud/collab Access.",
+        steps: [
+          { n: 1, title: "Sign in to Account", where: "manage.autodesk.com",
+            mental: "Goal-focused; expects software to be ready (new buyers: impatient post-purchase)",
+            pain: "I struggle to tell whether I should go to Products, Subscriptions, or another admin page to get my software." },
+          { n: 2, title: "Open Products & Services", where: "/products",
+            mental: "\"Where is my product?\" — wants the shortest path",
+            pain: "The landing page can load slowly when there are many products, and I may have started from the wrong place on Account Home." },
+          { n: 3, title: "Find product card", where: "P&S Landing · search if many",
+            mental: "Relieved when card appears; anxious when it doesn't",
+            pain: "If my product does not appear within about two minutes, I assume something is wrong. An empty list with no error message is especially frightening." },
+        ],
+        branches: {
+          forkAfter: 3,
+          paths: [
+            {
+              label: "Desktop product",
+              webScopeAfter: 5,
+              steps: [
+                { n: 4, title: "Choose action", where: "Install Now vs View details",
+                  mental: "Wants the fastest path; may pause if permissions feel unclear",
+                  pain: "I am not sure whether I am allowed to install from this page, and the path to View details is easy to overlook." },
+                { n: 5, title: "Click Install or Download", where: "Product card CTA",
+                  mental: "Committed; hopeful it's almost working",
+                  pain: "I may pick the wrong action because Install and Download mean different things, especially on Mac versus Windows." },
+                { n: 6, title: "Desktop install runs", where: "Out of browser",
+                  mental: "Waiting; outcome feels out of their hands",
+                  pain: "If the install fails after I click, I cannot fix it from the Products page and I do not know what went wrong." },
+                { n: 7, title: "Rate download", where: "Feedback modal", optional: true,
+                  mental: "Neutral or mildly annoyed",
+                  pain: "The feedback popup appears right as my download starts, which feels like an interruption." },
+              ],
+            },
+            {
+              label: "Cloud / collab service",
+              webScopeNote: "Web scope = full P&S path until redirect at Access",
+              steps: [
+                { n: 4, title: "Click Access", where: "Landing card only · no detail page",
+                  mental: "Ready to launch — one click should open the app",
+                  pain: "Cloud and desktop cards look alike, so I may not realize I do not need a download. There is nothing to preview before I click." },
+                { n: 5, title: "Open service", where: "URL redirect or ACE flow",
+                  mental: "Done if redirect works",
+                  pain: "If the redirect or ACE handoff fails, I have no fallback on this page." },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        id: "primary-admin",
+        label: "Primary Admin",
+        persona: "Company admin who owns subscriptions/seats for the org. On P&S they install for themselves or verify a build — not push installs to the whole team from this page.",
+        jtbd: "When I need software on my machine, I want to confirm the right product and version before I install — so I can trust what I am running and recommending to others.",
+        note: "Overlap with single-seat: same Install/Download CTAs on the same page. Difference is depth — search (many entitlements), View details, Updates tab, optional View subscriptions. Team seat assignment = UMA. Rollout to many PCs = IT Administrator path. Cloud/collab cards skip details — Access only.",
+        steps: [
+          { n: 1, title: "Sign in to Account", where: "manage.autodesk.com",
+            mental: "Task-oriented; responsible for others' access",
+            pain: "I have to jump between several admin areas in Account, and it is not always clear which one is for downloading software." },
+          { n: 2, title: "Go to Products", where: "Nav or Home",
+            mental: "Knows P&S is the download destination",
+            pain: "Products and Services can still feel like the same place as subscription and billing management, even though they serve different jobs." },
+          { n: 3, title: "Search product list", where: "P&S Landing search bar",
+            mental: "Scanning a long catalog for one target",
+            pain: "When my organization has hundreds of products, the page is slow to load and search only helps if I already know the product name." },
+        ],
+        branches: {
+          forkAfter: 3,
+          paths: [
+            {
+              label: "Desktop product",
+              webScopeAfter: 6,
+              steps: [
+                { n: 4, title: "Open View details", where: "Product card",
+                  mental: "Verifying version before committing",
+                  pain: "The View details action is easy to miss on a busy product card, so I may install without checking versions or updates." },
+                { n: 5, title: "Review Updates tab", where: "Product Details · default",
+                  mental: "Thorough; checking patches and release dates",
+                  pain: "The page shows annual versions, but the latest patch may be applied silently, so I can be surprised if I need a specific build." },
+                { n: 6, title: "Install or Download", where: "On their own machine",
+                  mental: "Installing for myself (or testing before I tell others what to use)",
+                  pain: "I am only installing on this computer from here. If I need to update the whole company, I have to use a different workflow or ask IT." },
+                { n: 7, title: "Desktop install runs", where: "Out of browser",
+                  mental: "Waiting for install to finish on my machine",
+                  pain: "I get no visibility into whether other people in my organization installed successfully." },
+                { n: 8, title: "View subscriptions", where: "Admin link", optional: true,
+                  mental: "Checking license context",
+                  pain: "A subscription link on the product page pulls me back into admin work when I came here to download." },
+              ],
+            },
+            {
+              label: "Cloud / collab service",
+              webScopeNote: "Web scope = full P&S path until redirect at Access",
+              steps: [
+                { n: 4, title: "Click Access", where: "Landing card only · no detail page",
+                  mental: "Verifying the right service before I send others to it",
+                  pain: "There is no detail page or Updates tab for cloud services, so I cannot confirm version or settings before I click." },
+                { n: 5, title: "Open service", where: "URL redirect or ACE flow",
+                  mental: "Checking that the handoff works before I recommend it",
+                  pain: "If Access fails, I have no diagnostics here and my team may hit the same broken redirect." },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        id: "it-admin",
+        label: "IT Administrator",
+        persona: "Enterprise IT who packages software once and deploys to many machines (SCCM, Intune, network share). Understands installers; may not know the design product itself.",
+        jtbd: "When I deploy Autodesk at scale, I want a configured offline install package — so I can roll out the same build consistently across my organization.",
+        note: "Only persona whose P&S job is build-once, deploy-many. Steps 4–7 on the desktop branch create reusable offline media for other PCs — not a personal install. Cloud/collab branch is rare (verify entitlement or open a service); no Custom Install.",
+        steps: [
+          { n: 1, title: "Sign in to Account", where: "manage.autodesk.com",
+            mental: "Methodical; verifying correct admin account",
+            pain: "I may be signed into the wrong account or lack permission to use deployment tools." },
+          { n: 2, title: "Open P&S Landing", where: "/products",
+            mental: "Targeting a specific product to package",
+            pain: "I still have to work through a long product list with the same performance limits as any other user." },
+          { n: 3, title: "Select product", where: "Product card",
+            mental: "Confirming product supports Custom Install (desktop) or Access (cloud)",
+            pain: "Custom Install is not offered for every desktop product, and cloud cards offer no packaging path at all." },
+        ],
+        branches: {
+          forkAfter: 3,
+          paths: [
+            {
+              label: "Desktop product",
+              webScopeAfter: 6,
+              steps: [
+                { n: 4, title: "Custom Install", where: "Or Direct Download in Details",
+                  mental: "Switching to packaging mode — not personal install",
+                  pain: "Custom Install looks and works differently from Download Now, so I can start the wrong workflow by mistake." },
+                { n: 5, title: "Configure package", where: "Updates · lang · plugins · MPD",
+                  mental: "Detail-heavy; optimizing for target machines",
+                  pain: "Legacy and new buying accounts behave differently under the hood, even though the page looks the same." },
+                { n: 6, title: "Create deployment package", where: "Offline media folder",
+                  mental: "Waiting while files download and assemble into a reusable package",
+                  pain: "Creating the offline package takes time and disk space, and I need to test it before I push it through SCCM or Intune to hundreds of machines." },
+                { n: 7, title: "Roll out to team machines", where: "SCCM / Intune / manual copy",
+                  mental: "Monitoring install success across the organization",
+                  pain: "The rollout happens outside Account, so when someone's install fails I cannot easily trace it back to what I built on this page." },
+              ],
+            },
+            {
+              label: "Cloud / collab service",
+              webScopeNote: "Web scope = full P&S path until redirect at Access",
+              steps: [
+                { n: 4, title: "Click Access", where: "Landing card only",
+                  mental: "Smoke-testing the service URL before wider rollout",
+                  pain: "There is no deployment package for cloud services — only a link-out I cannot push through SCCM." },
+                { n: 5, title: "Open service", where: "URL redirect or ACE flow",
+                  mental: "Confirming SSO and redirect work for my org",
+                  pain: "If ACE or the redirect fails, I cannot troubleshoot from P&S and users will open tickets." },
+              ],
+            },
+          ],
+        },
+      },
+    ];
+
+    function fillStepColumn(col, step) {
+      const stepBox = document.createElement("div");
+      stepBox.className = "pj-step-box" + (step.optional ? " optional" : "");
+      stepBox.innerHTML =
+        '<div class="step-n">' + step.n + ". " + step.title + '</div>' +
+        '<div class="step-where">' + step.where + '</div>';
+      col.appendChild(stepBox);
+
+      const conn = document.createElement("div");
+      conn.className = "pj-connector";
+      col.appendChild(conn);
+
+      const mental = document.createElement("div");
+      mental.className = "pj-mental-box";
+      mental.innerHTML = '<div class="pj-mini-label">Mental state</div>' + step.mental;
+      col.appendChild(mental);
+
+      const pain = document.createElement("div");
+      pain.className = "pj-pain-box";
+      pain.innerHTML = '<div class="pj-mini-label">Pain point</div>' + step.pain;
+      col.appendChild(pain);
+    }
+
+    function appendStepsToFlow(flowEl, steps) {
+      steps.forEach((step, i) => {
+        if (i > 0) {
+          const aw = document.createElement("div");
+          aw.className = "pj-arrow-wrap";
+          aw.innerHTML = '<span class="arrow">→</span>';
+          flowEl.appendChild(aw);
+        }
+        const col = document.createElement("div");
+        col.className = "pj-journey-col";
+        fillStepColumn(col, step);
+        flowEl.appendChild(col);
+      });
+    }
+
+    function renderScopeNote(path, className) {
+      const note = document.createElement("div");
+      note.className = className || "pj-scope-line";
+      if (path.webScopeAfter != null) {
+        note.textContent = "↑ PSET web scope ends after step " + path.webScopeAfter + " (desktop install takes over)";
+      } else if (path.webScopeNote) {
+        note.textContent = "↑ " + path.webScopeNote;
+      }
+      return note;
+    }
+
+    function drawForkSvg(forkZone, lanesStack) {
+      const h = lanesStack.offsetHeight;
+      if (h < 1) return;
+      const stackRect = lanesStack.getBoundingClientRect();
+      const lanes = lanesStack.querySelectorAll(".pj-branch-lane");
+      const targets = Array.from(lanes).map(function(lane) {
+        const stepBox = lane.querySelector(".pj-step-box");
+        if (!stepBox) return h / 2;
+        const r = stepBox.getBoundingClientRect();
+        return r.top - stackRect.top + r.height / 2;
+      });
+      const midY = h / 2;
+      const w = 44;
+      let d = "M 0 " + midY + " H 14";
+      targets.forEach(function(ty, i) {
+        d += " M 14 " + midY + " L 14 " + ty + " H " + w;
+      });
+      forkZone.innerHTML =
+        '<svg width="' + w + '" height="' + h + '" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="' + d + '" stroke="rgba(200,255,0,0.35)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<polygon points="' + (w - 2) + ',' + (targets[0] - 4) + ' ' + w + ',' + targets[0] + ' ' + (w - 2) + ',' + (targets[0] + 4) + '" fill="rgba(255,255,255,0.35)"/>' +
+        (targets.length > 1
+          ? '<polygon points="' + (w - 2) + ',' + (targets[1] - 4) + ' ' + w + ',' + targets[1] + ' ' + (w - 2) + ',' + (targets[1] + 4) + '" fill="#C8FF00"/>'
+          : "") +
+        "</svg>";
+    }
+
+    function renderBranchDiagram(p) {
+      const diagram = document.createElement("div");
+      diagram.className = "pj-branch-diagram";
+
+      const trunk = document.createElement("div");
+      trunk.className = "pj-trunk";
+      appendStepsToFlow(trunk, p.steps);
+      diagram.appendChild(trunk);
+
+      const trunkArrow = document.createElement("div");
+      trunkArrow.className = "pj-arrow-wrap";
+      trunkArrow.innerHTML = '<span class="arrow">→</span>';
+      diagram.appendChild(trunkArrow);
+
+      const forkZone = document.createElement("div");
+      forkZone.className = "pj-fork-zone";
+      diagram.appendChild(forkZone);
+
+      const lanesStack = document.createElement("div");
+      lanesStack.className = "pj-lanes-stack";
+
+      p.branches.paths.forEach(function(path) {
+        const isCloud = path.label.indexOf("Cloud") === 0;
+        const lane = document.createElement("div");
+        lane.className = "pj-branch-lane " + (isCloud ? "cloud" : "desktop");
+
+        const tag = document.createElement("div");
+        tag.className = "pj-lane-tag";
+        tag.textContent = path.label;
+        lane.appendChild(tag);
+
+        const laneFlow = document.createElement("div");
+        laneFlow.className = "pj-lane-flow";
+        appendStepsToFlow(laneFlow, path.steps);
+        lane.appendChild(laneFlow);
+
+        if (path.webScopeAfter != null || path.webScopeNote) {
+          lane.appendChild(renderScopeNote(path, "pj-scope-line lane"));
+        }
+
+        lanesStack.appendChild(lane);
+      });
+
+      diagram.appendChild(lanesStack);
+
+      requestAnimationFrame(function() {
+        drawForkSvg(forkZone, lanesStack);
+      });
+
+      return diagram;
+    }
+
+    function renderJourneyFlow(p) {
+      if (p.branches) {
+        return { flow: renderBranchDiagram(p), note: null };
+      }
+
+      const flow = document.createElement("div");
+      flow.className = "pj-journey-flow";
+      appendStepsToFlow(flow, p.steps);
+
+      if (p.webScopeAfter != null) {
+        const note = document.createElement("div");
+        note.className = "pj-scope-line";
+        note.textContent = "↑ PSET web scope ends after step " + p.webScopeAfter + " (desktop install takes over)";
+        return { flow, note };
+      }
+      return { flow, note: null };
+    }
+
+    function renderPanel(p) {
+      const wrap = document.createElement("div");
+
+      const header = document.createElement("div");
+      header.className = "pj-flow-header";
+
+      const personaBox = document.createElement("div");
+      personaBox.className = "pj-box persona";
+      personaBox.innerHTML = '<div class="label">PERSONA</div><div class="body"></div>';
+      personaBox.querySelector(".body").textContent = p.persona;
+      header.appendChild(personaBox);
+
+      const jtbdBox = document.createElement("div");
+      jtbdBox.className = "pj-box jtbd";
+      jtbdBox.innerHTML = '<div class="label">JOB TO BE DONE</div><div class="body"></div>';
+      jtbdBox.querySelector(".body").textContent = p.jtbd;
+      header.appendChild(jtbdBox);
+
+      wrap.appendChild(header);
+
+      if (p.note) {
+        const noteEl = document.createElement("div");
+        noteEl.className = "pj-note";
+        noteEl.innerHTML = "<strong>JOURNEY NOTE</strong>" + p.note;
+        wrap.appendChild(noteEl);
+      }
+
+      const label = document.createElement("div");
+      label.className = "pj-steps-label";
+      label.textContent = "Steps → Mental state → Pain point";
+      wrap.appendChild(label);
+
+      const { flow, note } = renderJourneyFlow(p);
+      const journeyPanel = document.createElement("div");
+      journeyPanel.className = "pj-journey-panel";
+      journeyPanel.appendChild(flow);
+      wrap.appendChild(journeyPanel);
+      if (note) journeyPanel.appendChild(note);
+
+      return wrap;
+    }
+
+    const tabsEl = document.getElementById("tabs");
+    const panelsEl = document.getElementById("panels");
+
+    PERSONAS.forEach((p, i) => {
+      const btn = document.createElement("button");
+      btn.className = "pj-tab" + (i === 0 ? " active" : "");
+      btn.textContent = p.label;
+      btn.onclick = () => {
+        document.querySelectorAll(".pj-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".pj-panel").forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + p.id).classList.add("active");
+      };
+      tabsEl.appendChild(btn);
+
+      const panel = document.createElement("div");
+      panel.className = "pj-panel" + (i === 0 ? " active" : "");
+      panel.id = "panel-" + p.id;
+      panel.appendChild(renderPanel(p));
+      panelsEl.appendChild(panel);
+    });
+  </script>
+</body>
+</html>
