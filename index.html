@@ -20,6 +20,10 @@
       </div>
       <p class="subtitle">Six P&amp;S tabs × three personas — install, updates, custom install, scheduled updates, trials, and hubs.</p>
     </div>
+    <div class="pj-intro">
+      <p class="pj-intro-lead"><strong>Current state</strong> — These flows describe how each persona uses Products &amp; Services in production today (<code>manage.autodesk.com/products</code>), not a future vision. Steps, mental states, and pain points reflect <a class="pj-link" href="https://pages.git.autodesk.com/subrampr/ps-guide/#what">Field Guide</a> research and public Account documentation where cited; gaps are called out as hypotheses.</p>
+      <p class="pj-intro-meta">Switch persona tabs below. Each tab section is one P&amp;S sub-tab with its own job-to-be-done. <strong>Primary</strong> journeys are the main path for that persona; <strong>secondary</strong> journeys are supporting or occasional workflows.</p>
+    </div>
     <div class="pj-card">
       <div class="pj-tabs" id="tabs"></div>
       <div id="panels"></div>
@@ -27,11 +31,14 @@
     <div class="pj-legend">
       <span><i class="pj-swatch pj-swatch-persona"></i> Persona</span>
       <span><i class="pj-swatch pj-swatch-jtbd"></i> JTBD</span>
+      <span><i class="pj-swatch pj-swatch-trigger"></i> Entry trigger</span>
       <span><i class="pj-swatch pj-swatch-mental"></i> Mental state</span>
       <span><i class="pj-swatch pj-swatch-pain"></i> Pain point</span>
-      <span>Each section = one P&amp;S tab · Cloud/collab branch only on All products</span>
+      <span><i class="pj-swatch pj-swatch-hypothesis"></i> Hypothesis (assumed)</span>
+      <span><i class="pj-priority pj-priority-primary pj-priority-legend"></i> Primary journey</span>
+      <span><i class="pj-priority pj-priority-secondary pj-priority-legend"></i> Secondary journey</span>
     </div>
-    <p class="pj-footer">Autodesk internal · PSET Experience Design · <a class="pj-link" href="ps-existing-journey-map.html">Journey map</a> · <a class="pj-link" href="aug4-scope-matrix.html">Scope matrix</a></p>
+    <p class="pj-footer">Autodesk internal · PSET Experience Design · Field Guide 2026</p>
   </main>
 
   <script src="assets/persona-journeys-data.js"></script>
@@ -54,8 +61,9 @@
       col.appendChild(mental);
 
       const pain = document.createElement("div");
-      pain.className = "pj-pain-box";
-      pain.innerHTML = '<div class="pj-mini-label">Pain point</div>' + step.pain;
+      pain.className = "pj-pain-box" + (step.hypothesis ? " hypothesis" : "");
+      const painLabel = step.hypothesis ? "Pain point · hypothesis" : "Pain point";
+      pain.innerHTML = '<div class="pj-mini-label">' + painLabel + '</div>' + step.pain;
       col.appendChild(pain);
     }
 
@@ -194,28 +202,56 @@
       personaBox.querySelector(".body").textContent = p.persona;
       header.appendChild(personaBox);
 
-      const jtbdBox = document.createElement("div");
-      jtbdBox.className = "pj-box jtbd";
-      jtbdBox.innerHTML = '<div class="label">JOB TO BE DONE</div><div class="body"></div>';
-      jtbdBox.querySelector(".body").textContent = p.jtbd;
-      header.appendChild(jtbdBox);
-
       wrap.appendChild(header);
 
-      p.journeys.forEach(function(journey) {
+      const journeys = p.journeys.slice().sort(function(a, b) {
+        if (a.priority === b.priority) return 0;
+        return a.priority === "primary" ? -1 : 1;
+      });
+
+      journeys.forEach(function(journey) {
         const section = document.createElement("div");
         section.className = "pj-journey-section";
+
+        const badgeRow = document.createElement("div");
+        badgeRow.className = "pj-tab-badge-row";
 
         const badge = document.createElement("div");
         badge.className = "pj-tab-badge";
         badge.textContent = journey.tab;
-        section.appendChild(badge);
+        badgeRow.appendChild(badge);
+
+        if (journey.priority) {
+          const priority = document.createElement("span");
+          priority.className = "pj-priority pj-priority-" + journey.priority;
+          priority.textContent = journey.priority === "primary" ? "Primary journey" : "Secondary journey";
+          badgeRow.appendChild(priority);
+        }
+
+        section.appendChild(badgeRow);
+
+        const sectionHeader = document.createElement("div");
+        sectionHeader.className = "pj-section-header";
+
+        const jtbdBox = document.createElement("div");
+        jtbdBox.className = "pj-box jtbd";
+        jtbdBox.innerHTML = '<div class="label">JOB TO BE DONE</div><div class="body"></div>';
+        jtbdBox.querySelector(".body").textContent = journey.jtbd;
+        sectionHeader.appendChild(jtbdBox);
+        section.appendChild(sectionHeader);
 
         if (journey.note) {
           const noteEl = document.createElement("div");
           noteEl.className = "pj-note";
           noteEl.innerHTML = "<strong>TAB CONTEXT</strong>" + journey.note;
           section.appendChild(noteEl);
+        }
+
+        if (journey.trigger) {
+          const trigger = document.createElement("div");
+          trigger.className = "pj-trigger";
+          trigger.innerHTML = "<strong>Entry trigger</strong>" + journey.trigger;
+          section.appendChild(trigger);
         }
 
         const label = document.createElement("div");
