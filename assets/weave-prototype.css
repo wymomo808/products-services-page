@@ -1,0 +1,583 @@
+/* Production-faithful P&S prototype — manage.autodesk.com/products/all */
+@import url("https://swc.autodesk.com/pharmacopeia/fonts/v1/ArtifaktElement.css");
+
+:root {
+  --wp-black: #000000;
+  --wp-white: #ffffff;
+  --wp-nav-active: #3c3c3c;
+  --wp-grey-50: #fafafa;
+  --wp-grey-100: #f5f5f5;
+  --wp-grey-200: #eeeeee;
+  --wp-grey-300: #dcdcdc;
+  --wp-grey-400: #999999;
+  --wp-grey-500: #666666;
+  --wp-grey-700: #3c3c3c;
+  --wp-link: #0696d7;
+  --wp-link-hover: #007fc6;
+  --wp-badge-blue: #0696d7;
+  --wp-font: "Artifakt Element", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body.wp-app {
+  font-family: var(--wp-font);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--wp-black);
+  background: var(--wp-white);
+  min-height: 100vh;
+}
+
+/* ── Global header (black) ── */
+.wp-global-header {
+  background: var(--wp-black);
+  color: var(--wp-white);
+  height: 48px;
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+}
+
+.wp-global-header__logo {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.wp-global-header__search {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.wp-global-header__search input {
+  width: 100%;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  background: #2b2b2b;
+  color: var(--wp-white);
+  padding: 0 12px 0 32px;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.wp-global-header__search input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.wp-global-header__search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.wp-global-header__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wp-notif-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--wp-white);
+  cursor: pointer;
+  padding: 6px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.wp-notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--wp-badge-blue);
+  color: var(--wp-white);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+.wp-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #555;
+  overflow: hidden;
+  display: block;
+}
+
+.wp-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Account secondary nav (black horizontal) ── */
+.wp-account-nav {
+  background: var(--wp-black);
+  display: flex;
+  align-items: stretch;
+  padding: 0 20px;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.wp-account-nav__brand {
+  color: var(--wp-white);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 20px 14px 0;
+  margin-right: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.wp-account-nav__link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 14px 16px;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  flex-shrink: 0;
+}
+
+.wp-account-nav__link:hover {
+  color: var(--wp-white);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wp-account-nav__link.is-active {
+  color: var(--wp-white);
+  background: var(--wp-nav-active);
+  border-bottom-color: var(--wp-white);
+  font-weight: 600;
+}
+
+/* ── Main content ── */
+.wp-main {
+  max-width: 100%;
+  padding: 28px 32px 48px;
+}
+
+.wp-page-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--wp-black);
+}
+
+/* ── P&S sub-tabs ── */
+.wp-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid var(--wp-grey-200);
+  margin-bottom: 12px;
+}
+
+.wp-subtab {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wp-grey-500);
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.wp-subtab:hover {
+  color: var(--wp-black);
+}
+
+.wp-subtab.is-active,
+.wp-subtab[aria-selected="true"] {
+  color: var(--wp-black);
+  font-weight: 600;
+  border-bottom-color: var(--wp-black);
+}
+
+.wp-help-link {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--wp-link);
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.wp-help-link:hover {
+  color: var(--wp-link-hover);
+  text-decoration: underline;
+}
+
+/* ── Page search ── */
+.wp-page-search {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.wp-page-search input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 4px;
+  background: var(--wp-grey-100);
+  padding: 0 16px 0 40px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--wp-black);
+}
+
+.wp-page-search input::placeholder {
+  color: var(--wp-grey-400);
+}
+
+.wp-page-search input:focus {
+  outline: none;
+  border-color: var(--wp-grey-400);
+  background: var(--wp-white);
+}
+
+.wp-page-search__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--wp-grey-400);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.wp-panel { display: none; }
+.wp-panel.is-active { display: block; }
+
+/* ── Section headings (marketplace) ── */
+.wp-section {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--wp-grey-200);
+}
+
+.wp-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.wp-section-desc {
+  font-size: 14px;
+  color: var(--wp-grey-500);
+  margin-bottom: 16px;
+}
+
+/* Marketplace filter tabs — match subtab style */
+.wp-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid var(--wp-grey-200);
+  margin-bottom: 20px;
+}
+
+.wp-filter-tab {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wp-grey-500);
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.wp-filter-tab.is-active,
+.wp-filter-tab[aria-selected="true"] {
+  color: var(--wp-black);
+  font-weight: 600;
+  border-bottom-color: var(--wp-black);
+}
+
+/* ── Product grid ── */
+.wp-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .wp-card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .wp-card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .wp-card-grid { grid-template-columns: 1fr; }
+  .wp-main { padding: 20px 16px 40px; }
+}
+
+/* ── Production product card ── */
+.wp-prod-card {
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 2px;
+  background: var(--wp-white);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+
+.wp-prod-card__head {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.wp-prod-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--wp-white);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.wp-prod-icon--teal { background: #008f86; }
+.wp-prod-icon--blue { background: #1e6dd6; }
+.wp-prod-icon--purple { background: #6b4c9a; }
+.wp-prod-icon--orange { background: #d45d00; }
+.wp-prod-icon--green { background: #2d7a3e; }
+
+.wp-prod-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  padding-top: 2px;
+}
+
+.wp-platform-icon {
+  font-size: 11px;
+  color: var(--wp-grey-500);
+  margin-bottom: 10px;
+}
+
+.wp-prod-card__desc {
+  font-size: 12px;
+  color: var(--wp-grey-500);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.wp-prod-card__selects {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.wp-select-wrap label {
+  display: block;
+  font-size: 10px;
+  color: var(--wp-grey-500);
+  margin-bottom: 2px;
+}
+
+.wp-select {
+  width: 100%;
+  height: 32px;
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 2px;
+  background: var(--wp-white);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 0 24px 0 8px;
+  color: var(--wp-black);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23666' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+/* Split button — black */
+.wp-split-btn {
+  display: flex;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.wp-split-btn__main {
+  flex: 1;
+  height: 36px;
+  border: none;
+  background: var(--wp-black);
+  color: var(--wp-white);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 2px 0 0 2px;
+}
+
+.wp-split-btn__main:hover {
+  background: #222;
+}
+
+.wp-split-btn__caret {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  background: var(--wp-black);
+  color: var(--wp-white);
+  cursor: pointer;
+  border-radius: 0 2px 2px 0;
+  font-size: 10px;
+}
+
+.wp-split-btn__caret:hover {
+  background: #222;
+}
+
+.wp-split-btn--single .wp-split-btn__main {
+  border-radius: 2px;
+}
+
+.wp-prod-card__footer {
+  margin-top: auto;
+}
+
+.wp-view-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wp-black);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.wp-view-details__circle {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--wp-grey-500);
+}
+
+.wp-view-details:hover {
+  color: var(--wp-link);
+}
+
+.wp-view-details:hover .wp-view-details__circle {
+  border-color: var(--wp-link);
+  color: var(--wp-link);
+}
+
+/* Marketplace solution card — same shell, simpler */
+.wp-sol-card {
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 2px;
+  background: var(--wp-white);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+}
+
+.wp-sol-card__badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border: 1px solid var(--wp-grey-300);
+  border-radius: 2px;
+  color: var(--wp-grey-500);
+  margin-top: 4px;
+}
+
+.wp-placeholder {
+  color: var(--wp-grey-500);
+  font-size: 14px;
+  padding: 32px 0;
+}
+
+.wp-footer-note {
+  margin-top: 32px;
+  font-size: 11px;
+  color: var(--wp-grey-400);
+}
+
+.wp-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--wp-grey-700);
+  color: var(--wp-white);
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 200;
+}
+
+.wp-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Prototype banner — subtle */
+.wp-proto-tag {
+  background: #fff8e6;
+  border-bottom: 1px solid #f0d78c;
+  color: #6b5a1e;
+  font-size: 11px;
+  padding: 6px 20px;
+  text-align: center;
+}

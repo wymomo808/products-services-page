@@ -157,7 +157,7 @@ body.pj-doc {
   gap: 0;
   background: var(--fg-dark);
   border-bottom: 1px solid #2a2a2a;
-  padding: 0 8px;
+  padding: 10px 8px 0;
 }
 
 .pj-tab {
@@ -347,8 +347,11 @@ body.pj-doc {
 }
 
 .pj-journey-panel {
+  --pj-bleed: max(0px, (100vw - 100%) / 2);
   background: var(--fg-dark);
-  padding: 20px 18px 16px;
+  margin-left: calc(-1 * var(--pj-bleed));
+  margin-right: calc(-1 * var(--pj-bleed));
+  padding: 32px calc(18px + var(--pj-bleed)) 28px;
   overflow-x: auto;
 }
 
