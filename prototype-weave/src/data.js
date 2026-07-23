@@ -98,7 +98,7 @@ export const RECENTLY_PURCHASED = [
     deployment: "Cloud",
     purchasedOn: "Jul 2, 2026",
     cta: "Access",
-    product: { name: "Fusion 360", logo: "/logos/fusion360.png" },
+    product: { name: "Fusion 360", logo: "./logos/fusion360.png" },
     app: {
       name: "CAM Assistant",
       tint: "#FF6A00",
@@ -110,7 +110,7 @@ export const RECENTLY_PURCHASED = [
     deployment: "Desktop",
     purchasedOn: "Jun 18, 2026",
     cta: "Download",
-    product: { name: "AutoCAD", logo: "/logos/autocad.png" },
+    product: { name: "AutoCAD", logo: "./logos/autocad.png" },
     app: {
       name: "DWG Markup Sync",
       tint: "#0696D7",
@@ -133,7 +133,7 @@ const PS_BASE = [
     id: "autocad",
     name: "AutoCAD",
     icon: ProductIdCM,
-    logo: "/logos/autocad.png",
+    logo: "./logos/autocad.png",
     platforms: ["windows", "apple", "linux", "cloud"],
     description:
       "2D and 3D CAD software with automation. Includes AutoCAD, specialized toolsets, and more.",
@@ -148,7 +148,7 @@ const PS_BASE = [
     id: "inventor",
     name: "Inventor",
     icon: ProductIdIM,
-    logo: "/logos/inventor.png",
+    logo: "./logos/inventor.png",
     platforms: ["windows", "apple", "linux", "cloud"],
     description: PS_LOREM.inventor,
     version: "2023",
@@ -162,7 +162,7 @@ const PS_BASE = [
     id: "fusion360",
     name: "Fusion 360",
     icon: ProductIdFM,
-    logo: "/logos/fusion360.png",
+    logo: "./logos/fusion360.png",
     platforms: ["windows", "apple", "linux", "cloud"],
     description: PS_LOREM.fusion,
     version: "2023",
@@ -176,7 +176,7 @@ const PS_BASE = [
     id: "revit",
     name: "Revit",
     icon: ProductIdRM,
-    logo: "/logos/revit.png",
+    logo: "./logos/revit.png",
     platforms: ["windows", "apple", "linux", "cloud"],
     description: PS_LOREM.revit,
     version: "2023",
@@ -621,10 +621,10 @@ export const UM_TABS = [
 export const UM_TEAMS = [{ id: "ts-org", label: "TS Organization" }];
 
 export const UM_PRODUCT_LOGOS = {
-  autocad: "/logos/autocad.png",
-  inventor: "/logos/inventor.png",
-  fusion360: "/logos/fusion360.png",
-  revit: "/logos/revit.png",
+  autocad: "./logos/autocad.png",
+  inventor: "./logos/inventor.png",
+  fusion360: "./logos/fusion360.png",
+  revit: "./logos/revit.png",
 };
 
 export const UM_USERS = [
@@ -735,7 +735,7 @@ const UM_ASSIGNED = [
     isAutodesk: true,
     tint: "#FF6A00",
     abbr: "FUS",
-    logoSrc: "/logos/fusion360.png",
+    logoSrc: "./logos/fusion360.png",
   },
   {
     id: "flex",
@@ -855,7 +855,7 @@ export const BO_SUBSCRIPTION_CARDS = [
     id: "autocad",
     name: "AutoCAD",
     type: "autodesk",
-    logoSrc: "/logos/autocad.png",
+    logoSrc: "./logos/autocad.png",
     stats: [
       { label: "Contracts", value: "5" },
       { label: "Seats", value: "21" },
@@ -866,7 +866,7 @@ export const BO_SUBSCRIPTION_CARDS = [
     id: "revit",
     name: "Revit",
     type: "autodesk",
-    logoSrc: "/logos/revit.png",
+    logoSrc: "./logos/revit.png",
     stats: [
       { label: "Subscriptions", value: "8" },
       { label: "Seats", value: "20" },
@@ -942,7 +942,7 @@ export const BO_SUBSCRIPTIONS = [
     productId: "autocad",
     displayName: "AutoCAD — including specialized toolsets",
     productName: "AutoCAD — including specialized toolsets",
-    logoSrc: "/logos/autocad.png",
+    logoSrc: "./logos/autocad.png",
     referenceLabel: "Subscription ID 73348785692472",
     team: "TS Organization",
     seats: 1,
@@ -960,7 +960,7 @@ export const BO_SUBSCRIPTIONS = [
     productId: "revit",
     displayName: "Revit",
     productName: "Revit",
-    logoSrc: "/logos/revit.png",
+    logoSrc: "./logos/revit.png",
     referenceLabel: "Contract #110004910264",
     team: "TS Organization",
     seats: 21,
@@ -978,7 +978,7 @@ export const BO_SUBSCRIPTIONS = [
     productId: "inventor",
     displayName: "Inventor",
     productName: "Inventor",
-    logoSrc: "/logos/inventor.png",
+    logoSrc: "./logos/inventor.png",
     referenceLabel: "Subscription ID 73348785692480",
     team: "TS Organization",
     seats: 5,
@@ -996,7 +996,7 @@ export const BO_SUBSCRIPTIONS = [
     productId: "fusion360",
     displayName: "Fusion 360",
     productName: "Fusion 360",
-    logoSrc: "/logos/fusion360.png",
+    logoSrc: "./logos/fusion360.png",
     referenceLabel: "Subscription ID 73348785692491",
     team: "TS Organization",
     seats: 3,
