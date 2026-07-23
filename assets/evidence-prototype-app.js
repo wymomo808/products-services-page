@@ -419,7 +419,7 @@
     var approvedPanel = renderApprovedTable(state.approvedFilter);
 
     return (
-      '<nav class="ep-tabs" aria-label="Products and Services tabs">' +
+      '<nav class="ep-tabs" aria-label="Products & Solutions tabs">' +
       tabs +
       "</nav>" +
       '<section class="ep-panel' +

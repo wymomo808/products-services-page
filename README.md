@@ -1,6 +1,6 @@
 # P&S Persona Journey Flows
 
-Interactive persona journey maps for Products & Services fulfillment at `manage.autodesk.com/products`.
+Interactive persona journey maps for Products & Solutions fulfillment at `manage.autodesk.com/products`.
 
 **Live site (Autodesk):** https://pages.git.autodesk.com/wuya/products-services-page/
 
@@ -18,9 +18,9 @@ Open `ps-persona-journey-flow.html` locally, or use the GitHub Pages URL above.
 
 Shared assets: `assets/evidence-prototype-data.js`, `assets/evidence-prototype-app.js`, `assets/evidence-prototype.css`.
 
-## All products and solutions (Weave prototype)
+## All products & solutions (Weave prototype)
 
-Based on the production P&amp;S page (`manage.autodesk.com/products/updates`). The **All products and solutions** tab shows:
+Based on the production P&amp;S page (`manage.autodesk.com/products/updates`). The **All products & solutions** tab shows:
 
 1. **Autodesk products** — install / download / access cards
 2. **Marketplace solutions** — filterable by **Apps**, **Agents**, **Templates**, **Skills** (Weave `Chip` filters)

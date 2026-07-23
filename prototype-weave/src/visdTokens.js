@@ -1,4 +1,4 @@
-/** Tokens extracted from Figma VisD — Products & Services Redesign (node 2327:484295). */
+/** Tokens extracted from Figma VisD — Products & Solutions Redesign (node 2327:484295). */
 export const VIS_D = {
   colors: {
     background: "#FFFFFF",
@@ -14,6 +14,12 @@ export const VIS_D = {
     accent: "#5F60FF",
     navActive: "#3C3C3C",
     link: "#0696D7",
+    warning: "#FFC21A",
+    panel: "#F2F2F2",
+    rowDivider: "rgba(0, 0, 0, 0.1)",
+    footerBg: "#DEDEDE",
+    textLight: "rgba(0, 0, 0, 0.6)",
+    disabled: "rgba(0, 0, 0, 0.38)",
   },
   spacing: {
     pageTop: 32,
@@ -68,6 +74,23 @@ export const VIS_D = {
       lineHeight: 1.5,
       color: "#000000",
     },
+    // Section headings (e.g. Recently purchased) — Weave extra-bold tier (800).
+    sectionTitle: {
+      fontFamily: '"Artifakt Element", ArtifaktElement, Arial, sans-serif',
+      fontSize: "20px",
+      fontWeight: 800,
+      lineHeight: 1.2,
+      letterSpacing: 0,
+      color: "#000000",
+    },
+    productDetailTitle: {
+      fontFamily: '"Artifakt Element", ArtifaktElement, Arial, sans-serif',
+      fontSize: "34px",
+      fontWeight: 800,
+      lineHeight: 1.2,
+      letterSpacing: 0,
+      color: "#000000",
+    },
     label16Semi: {
       fontSize: "16px",
       fontWeight: 600,
@@ -77,6 +100,25 @@ export const VIS_D = {
       fontSize: "14px",
       fontWeight: 600,
       lineHeight: "18px",
+    },
+    label14Bold: {
+      fontSize: "14px",
+      fontWeight: 700,
+      lineHeight: 1.5,
+    },
+    billingSummary: {
+      fontFamily: '"Artifakt Element", ArtifaktElement, Arial, sans-serif',
+      fontSize: "21px",
+      fontWeight: 700,
+      lineHeight: 1.25,
+      color: "#000000",
+    },
+    billingCount: {
+      fontFamily: '"Artifakt Element", ArtifaktElement, Arial, sans-serif',
+      fontSize: "26px",
+      fontWeight: 800,
+      lineHeight: 1.2,
+      color: "#212121",
     },
     smallprint: {
       fontSize: "12px",

@@ -5,7 +5,7 @@ const PERSONAS = [
     persona: "Solo professional or team-assigned end user (includes new buyers and former “Coordinator” roles). Not the subscription owner or IT deployer.",
     journeys: [
       {
-        tab: "All products and services",
+        tab: "All products & solutions",
         priority: "primary",
         trigger: "New purchase, reinstall on a new machine, or email/deep link saying software is ready — expects product within ~2 minutes after purchase.",
         jtbd: "When I need Autodesk software, I want to find my product and install it or open it quickly — so I can start working without calling support.",
@@ -14,7 +14,7 @@ const PERSONAS = [
           { n: 1, title: "Sign in to Account", where: "manage.autodesk.com",
             mental: "Goal-focused; expects software to be ready",
             pain: "I struggle to tell whether I should go to Products, Subscriptions, or another admin page." },
-          { n: 2, title: "Open P&S", where: "Products and services nav",
+          { n: 2, title: "Open P&S", where: "Products & solutions nav",
             mental: "\"Where is my product?\" — wants the shortest path",
             pain: "Landing can load slowly with many entitled products; I may have started from the wrong Account page.",
             hypothesis: true },
@@ -141,7 +141,7 @@ const PERSONAS = [
     persona: "Company admin who owns subscriptions and seats. Uses P&S for personal installs, update verification, light packaging, hub setup, and scheduled-update policies — not full enterprise SCCM rollout.",
     journeys: [
       {
-        tab: "All products and services",
+        tab: "All products & solutions",
         priority: "primary",
         trigger: "Personal install, or verifying a build before recommending it to the team — often after assigning seats in UMA.",
         jtbd: "When I need software on my machine, I want to confirm the right product and version before I install — so I can trust what I am running and recommending to others.",
@@ -335,7 +335,7 @@ const PERSONAS = [
             hypothesis: true },
           { n: 6, title: "Direct users to hub", where: "URL / invite flow",
             mental: "Done when hub is reachable",
-            pain: "End-user path is the Access button on All products and services — not linked from here." },
+            pain: "End-user path is the Access button on All products & solutions — not linked from here." },
         ],
         webScopeAfter: 5,
       },
@@ -380,7 +380,7 @@ const PERSONAS = [
     persona: "Enterprise IT who packages once and deploys to many machines (SCCM, Intune, network share). Primary user of Custom install and Scheduled updates; uses Product Updates for bulk media.",
     journeys: [
       {
-        tab: "All products and services",
+        tab: "All products & solutions",
         priority: "secondary",
         trigger: "Starting a deployment cycle — confirming product entitlement and that Custom install is supported before packaging.",
         jtbd: "When I prepare an enterprise deployment, I want to confirm a product is entitled and supports packaging — so I use the right P&S tab next.",
@@ -522,7 +522,7 @@ const PERSONAS = [
             mental: "Confirming SSO and region work",
             pain: "Cannot push hub URL through SCCM like a desktop installer." },
           { n: 4, title: "Document user instructions", where: "IT comms",
-            mental: "Directing users to the Access button on the All products and services page",
+            mental: "Directing users to the Access button on the All products & solutions page",
             pain: "Hubs tab is admin-only — no link from here to the end-user Access button path." },
         ],
         webScopeAfter: 3,

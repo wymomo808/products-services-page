@@ -1,0 +1,116 @@
+/* Self-hosted Artifakt Element (Autodesk brand font).
+   Files in /public/fonts are served at /fonts/*. Real weights available:
+   Regular 400, Medium 500, Bold 700, Black 900. Autodesk "Semi Bold" (600)
+   is not published as a separate file, so 600 maps to Bold. */
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Bold.woff2") format("woff2");
+}
+/* Weave's heaviest headline tier is extra-bold (800), normally Artifakt Legend
+   Extra Bold — which isn't publicly hosted — so 800 uses the Black file (closest
+   available heavier weight in Artifakt Element). */
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Artifakt Element";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+
+/* Alias without space, used as a fallback token in some styles. */
+@font-face {
+  font-family: "ArtifaktElement";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktElement";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktElement";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktElement";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktElement";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+
+/* Legend tier isn't hosted separately — map to Element Black for extra-bold headlines. */
+@font-face {
+  font-family: "Artifakt Legend";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Artifakt Legend";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktLegend";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "ArtifaktLegend";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ArtifaktElement-Black.woff2") format("woff2");
+}

@@ -28,7 +28,6 @@ import {
   createTheme,
   getTheme,
 } from "@weave-mui/material";
-import Search from "@weave-mui/search";
 import {
   buttonGroupKind,
   cardVariant,
@@ -43,13 +42,8 @@ import {
   NotificationS,
   SearchS,
 } from "@weave-mui/icons-weave";
-import {
-  ACCOUNT_NAV,
-  MARKETPLACE_FILTERS,
-  MARKETPLACE_SOLUTIONS,
-  PAGE_TABS,
-  PRODUCTS,
-} from "./data.js";
+import AccountSearchField, { SearchFilterBar } from "./AccountSearchField.jsx";
+import { ACCOUNT_NAV, PAGE_TABS, PRODUCTS } from "./data.js";
 import AutodeskLogo from "./AutodeskLogo.jsx";
 import ProductLockup from "./ProductLockup.jsx";
 import { VIS_D } from "./visdTokens.js";
@@ -75,24 +69,6 @@ const tabListSx = {
   "& .MuiTabs-indicator": {
     backgroundColor: VIS_D.colors.ink,
     height: 3,
-  },
-};
-
-const searchFieldSx = {
-  "& .MuiOutlinedInput-root": {
-    height: VIS_D.sizes.fieldHeight,
-    borderRadius: `${VIS_D.radius.field}px`,
-    bgcolor: VIS_D.colors.searchFill,
-    fontSize: VIS_D.typography.label16Semi.fontSize,
-    fontWeight: VIS_D.typography.label16Semi.fontWeight,
-    lineHeight: VIS_D.typography.label16Semi.lineHeight,
-    "& fieldset": { border: "none" },
-    "&:hover fieldset": { border: "none" },
-    "&.Mui-focused fieldset": { border: "none" },
-  },
-  "& .MuiInputBase-input::placeholder": {
-    color: VIS_D.colors.ink,
-    opacity: 1,
   },
 };
 
@@ -145,15 +121,14 @@ function ProductCard({ product, onAction }) {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
               mb: "16px",
-              color: VIS_D.colors.textMuted,
+              color: VIS_D.colors.ink,
             }}
           >
-            <DeviceDesktopS sx={{ width: 16, height: 16 }} />
-            <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textMuted }}>
-              Windows
-            </Typography>
+            {(product.platforms || ["Windows"]).map((os) => (
+              <DeviceDesktopS key={os} aria-label={os} sx={{ width: 18, height: 18 }} />
+            ))}
           </Box>
         )}
 
@@ -289,64 +264,10 @@ function ProductCard({ product, onAction }) {
   );
 }
 
-function SolutionCard({ solution, onAction }) {
-  return (
-    <Card
-      variant={cardVariant.OUTLINED}
-      sx={{
-        minHeight: 280,
-        height: "100%",
-        borderRadius: `${VIS_D.radius.card}px`,
-        border: `1px solid ${VIS_D.colors.border}`,
-        boxShadow: "none",
-        bgcolor: VIS_D.colors.background,
-      }}
-    >
-      <CardContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          p: `${VIS_D.spacing.cardPadding}px`,
-          "&:last-child": { pb: `${VIS_D.spacing.cardPadding}px` },
-        }}
-      >
-        <Typography sx={{ ...VIS_D.typography.headlineSmall, mb: "4px" }}>
-          {solution.name}
-        </Typography>
-        <Typography sx={{ ...VIS_D.typography.smallprint, color: VIS_D.colors.textMuted, mb: "16px" }}>
-          {solution.status}
-        </Typography>
-        <Typography sx={{ ...VIS_D.typography.bodyMedium, color: VIS_D.colors.textPrimary, mb: "24px", flex: 1 }}>
-          {solution.vendor} · Works with {solution.worksWith.join(", ")}
-          <br />
-          <br />
-          {solution.blurb}
-        </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => onAction(`Manage — ${solution.name}`)}
-          sx={{
-            mb: "16px",
-            borderColor: VIS_D.colors.ink,
-            color: VIS_D.colors.ink,
-            ...VIS_D.typography.label16Semi,
-            borderRadius: `${VIS_D.radius.button}px`,
-          }}
-        >
-          Manage
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-
 export default function App() {
   const [theme, setTheme] = useState(null);
   const [tab, setTab] = useState("all");
-  const [marketplaceFilter, setMarketplaceFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [solutionQuery, setSolutionQuery] = useState("");
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -356,6 +277,11 @@ export default function App() {
           ...base,
           palette: {
             ...base.palette,
+            primary: {
+              ...base.palette?.primary,
+              main: VIS_D.colors.ink,
+              contrastText: "#ffffff",
+            },
             text: {
               ...base.palette?.text,
               primary: VIS_D.colors.ink,
@@ -406,10 +332,16 @@ export default function App() {
               styleOverrides: {
                 ...base.components?.MuiButton?.styleOverrides,
                 contained: {
-                  backgroundColor: VIS_D.colors.ink,
-                  color: "#ffffff",
-                  boxShadow: "none",
-                  "&:hover": { backgroundColor: "#222222", boxShadow: "none" },
+                  backgroundColor: `${VIS_D.colors.ink} !important`,
+                  color: "#ffffff !important",
+                  boxShadow: "none !important",
+                  "&:hover": { backgroundColor: "#222222 !important" },
+                },
+                containedPrimary: {
+                  backgroundColor: `${VIS_D.colors.ink} !important`,
+                  color: "#ffffff !important",
+                  boxShadow: "none !important",
+                  "&:hover": { backgroundColor: "#222222 !important" },
                 },
               },
             },
@@ -435,7 +367,7 @@ export default function App() {
             MuiLink: {
               styleOverrides: {
                 root: {
-                  color: VIS_D.colors.link,
+                  color: `${VIS_D.colors.ink} !important`,
                 },
               },
             },
@@ -457,16 +389,6 @@ export default function App() {
     return PRODUCTS.filter((p) => p.name.toLowerCase().includes(q));
   }, [searchQuery]);
 
-  const filteredSolutions = useMemo(() => {
-    const q = solutionQuery.trim().toLowerCase();
-    return MARKETPLACE_SOLUTIONS.filter((s) => {
-      const matchesFilter = marketplaceFilter === "all" || s.category === marketplaceFilter;
-      const matchesQuery =
-        !q || s.name.toLowerCase().includes(q) || s.vendor.toLowerCase().includes(q);
-      return matchesFilter && matchesQuery;
-    });
-  }, [marketplaceFilter, solutionQuery]);
-
   if (!theme) {
     return (
       <Box sx={{ p: 4, fontFamily: FONT }}>
@@ -484,33 +406,34 @@ export default function App() {
             <AutodeskLogo />
           </ApplicationInfoSlot>
 
-          <Box sx={{ flex: 1, maxWidth: 360, mx: "auto" }}>
-            <Search
-              options={[]}
-              freeSolo
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Search Autodesk"
-                  size="small"
-                  fullWidth
-                  sx={headerSearchFieldSx}
-                  InputProps={{
-                    ...params.InputProps,
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchS sx={{ width: 16, height: 16 }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
+          <Box sx={{ width: 460, ml: 3, mr: "auto" }}>
+            <TextField
+              placeholder="Search"
+              size="small"
+              fullWidth
+              aria-label="Search Autodesk"
+              sx={headerSearchFieldSx}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchS sx={{ width: 16, height: 16 }} />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Box>
 
           <ServiceCenterSlot>
             <IconButton aria-label="Notifications" size="small">
-              <Badge badgeContent={1} color="primary">
+              <Badge
+                badgeContent={1}
+                sx={{
+                  "& .MuiBadge-badge": {
+                    backgroundColor: VIS_D.colors.link,
+                    color: "#fff",
+                  },
+                }}
+              >
                 <NotificationS sx={{ width: 20, height: 20 }} />
               </Badge>
             </IconButton>
@@ -548,7 +471,7 @@ export default function App() {
             Account
           </Typography>
           {ACCOUNT_NAV.map((item) => {
-            const active = item === "Products and services";
+            const active = item === "Products & solutions";
             return (
               <Box
                 key={item}
@@ -578,21 +501,19 @@ export default function App() {
 
         <Box
           sx={{
-            px: `${VIS_D.spacing.pageX}px`,
+            px: "68px",
             pt: `${VIS_D.spacing.pageTop}px`,
             pb: 5,
-            maxWidth: 1160,
-            mx: "auto",
           }}
         >
           <Typography component="h1" sx={{ ...VIS_D.typography.pageTitle, mb: `${VIS_D.spacing.blockGap}px` }}>
-            Products and services
+            Products & solutions
           </Typography>
 
           <TabContext value={tab}>
             <TabList
               onChange={(_e, value) => setTab(value)}
-              aria-label="Products and services views"
+              aria-label="Products & solutions views"
               sx={tabListSx}
             >
               {PAGE_TABS.map((t) => (
@@ -605,7 +526,8 @@ export default function App() {
                 href="#"
                 sx={{
                   ...VIS_D.typography.bodySmall,
-                  color: VIS_D.colors.link,
+                  color: VIS_D.colors.ink,
+                  textDecoration: "underline",
                   mb: `${VIS_D.spacing.sectionGap}px`,
                   display: "inline-block",
                 }}
@@ -613,30 +535,14 @@ export default function App() {
                 Can&apos;t find a product?
               </Link>
 
-              <Box
-                sx={{
-                  border: `1px solid ${VIS_D.colors.border}`,
-                  borderRadius: `${VIS_D.radius.filters}px`,
-                  bgcolor: VIS_D.colors.background,
-                  p: `${VIS_D.spacing.filtersPadding}px`,
-                  mb: `${VIS_D.spacing.blockGap}px`,
-                }}
-              >
-                <TextField
+              <SearchFilterBar>
+                <AccountSearchField
                   fullWidth
-                  placeholder="Search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  sx={searchFieldSx}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchS sx={{ width: 16, height: 16 }} />
-                      </InputAdornment>
-                    ),
-                  }}
+                  sx={{ flex: "none", width: "100%" }}
                 />
-              </Box>
+              </SearchFilterBar>
 
               <Box
                 sx={{
@@ -655,69 +561,6 @@ export default function App() {
                   <ProductCard key={product.id} product={product} onAction={setToast} />
                 ))}
               </Box>
-
-              <Box sx={{ borderTop: `1px solid ${VIS_D.colors.border}`, pt: `${VIS_D.spacing.blockGap}px` }}>
-                <Typography sx={{ ...VIS_D.typography.pageTitle, fontSize: "24px", mb: "4px" }}>
-                  Marketplace solutions
-                </Typography>
-                <Typography sx={{ ...VIS_D.typography.bodyMedium, color: VIS_D.colors.textPrimary, mb: `${VIS_D.spacing.sectionGap}px` }}>
-                  Apps, agents, templates, and skills from the Autodesk ecosystem.
-                </Typography>
-
-                <TabContext value={marketplaceFilter}>
-                  <TabList
-                    onChange={(_e, value) => setMarketplaceFilter(value)}
-                    aria-label="Marketplace filters"
-                    sx={{ ...tabListSx, minHeight: 40, "& .MuiTab-root": { minHeight: 40, py: 1 } }}
-                  >
-                    {MARKETPLACE_FILTERS.map((f) => (
-                      <Tab key={f.id} label={f.label} value={f.id} sx={{ minHeight: 40, py: 1 }} />
-                    ))}
-                  </TabList>
-                </TabContext>
-
-                <Box
-                  sx={{
-                    border: `1px solid ${VIS_D.colors.border}`,
-                    borderRadius: `${VIS_D.radius.filters}px`,
-                    bgcolor: VIS_D.colors.background,
-                    p: `${VIS_D.spacing.filtersPadding}px`,
-                    mb: `${VIS_D.spacing.blockGap}px`,
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    placeholder="Search marketplace solutions"
-                    value={solutionQuery}
-                    onChange={(e) => setSolutionQuery(e.target.value)}
-                    sx={searchFieldSx}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchS sx={{ width: 16, height: 16 }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: {
-                      xs: "1fr",
-                      sm: "1fr 1fr",
-                      md: "repeat(3, 1fr)",
-                      lg: "repeat(4, 1fr)",
-                    },
-                    gap: `${VIS_D.spacing.cardGap}px`,
-                  }}
-                >
-                  {filteredSolutions.map((solution) => (
-                    <SolutionCard key={solution.id} solution={solution} onAction={setToast} />
-                  ))}
-                </Box>
-              </Box>
             </TabPanel>
 
             {PAGE_TABS.filter((t) => t.id !== "all").map((t) => (
@@ -726,7 +569,8 @@ export default function App() {
                   href="#"
                   sx={{
                     ...VIS_D.typography.bodySmall,
-                    color: VIS_D.colors.link,
+                    color: VIS_D.colors.ink,
+                    textDecoration: "underline",
                     mb: `${VIS_D.spacing.sectionGap}px`,
                     display: "inline-block",
                   }}
@@ -739,10 +583,6 @@ export default function App() {
               </TabPanel>
             ))}
           </TabContext>
-
-          <Typography sx={{ ...VIS_D.typography.smallprint, color: VIS_D.colors.textMuted, display: "block", mt: 4 }}>
-            Concept prototype · VisD Figma tokens · Marketplace section is net-new
-          </Typography>
         </Box>
 
         {toast && (

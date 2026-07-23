@@ -10,7 +10,8 @@
   };
 
   var PAGE_TABS = [
-    { id: "all", label: "All products and services" },
+    { id: "all", label: "All products & solutions" },
+    { id: "my-app", label: "My app" },
     { id: "updates", label: "Product Updates" },
     { id: "custom-install", label: "Custom install" },
     { id: "scheduled-updates", label: "Scheduled updates" },
@@ -227,6 +228,10 @@
       if (tab.id === "all") {
         content =
           '<a class="wp-help-link" href="#">Can\'t find a product?</a>' + renderAllPanel();
+      } else if (tab.id === "my-app") {
+        content = renderPlaceholder(
+          "My app — a dedicated workspace within Products & solutions."
+        );
       } else if (tab.id === "updates") {
         content = renderPlaceholder(
           "Searchable list of product updates, plug-ins, extensions, and language packs."
@@ -248,7 +253,7 @@
     }).join("");
 
     root.innerHTML =
-      '<nav class="wp-subtabs" role="tablist" aria-label="Products and services views">' +
+      '<nav class="wp-subtabs" role="tablist" aria-label="Products & solutions views">' +
       subtabs + "</nav>" + panels;
   }
 
