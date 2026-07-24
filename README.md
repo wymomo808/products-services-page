@@ -29,8 +29,11 @@ Built to match production `manage.autodesk.com/products/all`: black global heade
 
 | Open | Path |
 |------|------|
-| Prototype | `prototype-all-products-solutions.html` |
-| Assets | `assets/weave-prototype-app.js`, `assets/weave-prototype-data.js` |
-| React source (optional) | `prototype-weave/` — `npm install && npm run dev` |
+| Prototype (Round 1) | `prototype-all-products-solutions.html` |
+| **Vision prototype (Capability Control Center)** | `prototype-capability-control-center.html` |
+| Assets (Round 1) | `assets/weave-app/` |
+| Assets (Vision) | `assets/weave-vision-app/` |
+| React source (Round 1) | `prototype-weave/` — `npm install && npm run dev` |
+| React source (Vision) | `prototype-weave-vision/` — `npm install && npm run dev` |
 
-Rebuild React version (optional): `cd prototype-weave && npm run build`
+Rebuild React versions: `cd prototype-weave && npm run build` · `cd prototype-weave-vision && npm run build`

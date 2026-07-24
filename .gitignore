@@ -49,5 +49,7 @@ aug4-scope-matrix.*
 # Weave prototype build tooling
 prototype-weave/node_modules/
 prototype-weave/dist/
+prototype-weave-vision/node_modules/
+prototype-weave-vision/dist/
 
 ps-existing-journey-map.*
