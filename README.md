@@ -30,10 +30,15 @@ Built to match production `manage.autodesk.com/products/all`: black global heade
 | Open | Path |
 |------|------|
 | Prototype (Round 1) | `prototype-all-products-solutions.html` |
-| **Vision prototype (Capability Control Center)** | `prototype-capability-control-center.html` |
+| **V1 — Capability Control Center** | `prototype-capability-control-center.html` |
+| V2 — Capability Control Center (duplicate) | `prototype-capability-control-center-v2.html` *(after first V2 build)* |
 | Assets (Round 1) | `assets/weave-app/` |
-| Assets (Vision) | `assets/weave-vision-app/` |
+| Assets (V1) | `assets/weave-vision-app/` |
+| Assets (V2) | `assets/weave-vision-v2-app/` *(after first V2 build)* |
 | React source (Round 1) | `prototype-weave/` — `npm install && npm run dev` |
-| React source (Vision) | `prototype-weave-vision/` — `npm install && npm run dev` |
+| React source (V1) | `prototype-weave-vision/` — `npm install && npm run dev` (port 5174) |
+| React source (V2) | `prototype-weave-vision-v2/` — `npm install && npm run dev` (port 5175) |
 
-Rebuild React versions: `cd prototype-weave && npm run build` · `cd prototype-weave-vision && npm run build`
+Rebuild React versions: `cd prototype-weave && npm run build` · `cd prototype-weave-vision && npm run build` · `cd prototype-weave-vision-v2 && npm run build`
+
+**GitHub release:** [V1](https://github.com/wymomo808/products-services-page/releases/tag/v1) tags the frozen Capability Control Center prototype (`prototype-weave-vision/` → `prototype-capability-control-center.html`). V2 is a working copy for the next iteration.

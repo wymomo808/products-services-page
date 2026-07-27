@@ -51,5 +51,7 @@ prototype-weave/node_modules/
 prototype-weave/dist/
 prototype-weave-vision/node_modules/
 prototype-weave-vision/dist/
+prototype-weave-vision-v2/node_modules/
+prototype-weave-vision-v2/dist/
 
 ps-existing-journey-map.*
