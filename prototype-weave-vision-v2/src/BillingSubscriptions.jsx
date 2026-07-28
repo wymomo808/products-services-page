@@ -2,11 +2,10 @@ import { useMemo, useRef, useState } from "react";
 import {
   Box,
   ClickAwayListener,
-  IconButton,
   Link,
   Typography,
 } from "@weave-mui/material";
-import { CaretDownS, CaretUpS, CtaArrowRightS, FilterS } from "@weave-mui/icons-weave";
+import { CaretDownS, CaretUpS, FilterS } from "@weave-mui/icons-weave";
 import AccountSearchField, {
   ActionsBarButton,
   FilterBarButton,
@@ -21,7 +20,7 @@ import { FONT } from "./useAccountTheme.js";
 import { VIS_D } from "./visdTokens.js";
 
 const GRID_COLS =
-  "minmax(280px, 2.2fr) minmax(120px, 1fr) minmax(90px, 0.8fr) minmax(72px, 0.7fr) minmax(120px, 1fr) minmax(110px, 0.9fr) 40px";
+  "minmax(280px, 2.2fr) minmax(120px, 1fr) minmax(90px, 0.8fr) minmax(72px, 0.7fr) minmax(120px, 1fr) minmax(110px, 0.9fr)";
 
 function SubscriptionIcon({ row }) {
   if (row.logoSrc) {
@@ -228,7 +227,7 @@ export default function BillingSubscriptions({ onAction }) {
                   }}
                 />
               </Link>
-              {["Team", "Quantity", "Term", "Payment method", "Date", ""].map((heading) => (
+              {["Team", "Quantity", "Term", "Payment method", "Date"].map((heading) => (
                 <Typography
                   key={heading || "actions"}
                   sx={{ ...VIS_D.typography.label14Semi, fontFamily: FONT, fontWeight: 700, color: VIS_D.colors.ink }}
@@ -266,14 +265,6 @@ export default function BillingSubscriptions({ onAction }) {
                     {row.expires}
                   </Typography>
                 </Box>
-                <IconButton
-                  aria-label={`View ${row.displayName}`}
-                  size="small"
-                  onClick={() => onAction(`View subscription — ${row.displayName}`)}
-                  sx={{ color: VIS_D.colors.ink, justifySelf: "end" }}
-                >
-                  <CtaArrowRightS sx={{ width: 16, height: 16 }} />
-                </IconButton>
               </Box>
             ))}
           </Box>

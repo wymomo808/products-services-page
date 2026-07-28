@@ -127,7 +127,7 @@ function SummaryContent({ onAction }) {
   );
 }
 
-export default function BillingOrders({ onNavigate }) {
+export default function BillingOrders({ onNavigate, navItems }) {
   const theme = useAccountTheme();
   const [tab, setTab] = useState("summary");
   const [toast, setToast] = useState("");
@@ -139,7 +139,7 @@ export default function BillingOrders({ onNavigate }) {
   }, [toast]);
 
   return (
-    <AccountShell theme={theme} activeNav="Billing and orders" onNavigate={onNavigate} toast={toast}>
+    <AccountShell theme={theme} activeNav="Billing and orders" onNavigate={onNavigate} toast={toast} navItems={navItems}>
       <Box sx={{ px: PAGE_X, pt: "32px", pb: "48px", flex: 1 }}>
         <Box
           sx={{

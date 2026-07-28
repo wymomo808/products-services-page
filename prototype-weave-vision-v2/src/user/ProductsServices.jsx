@@ -12,27 +12,26 @@ import {
   Typography,
 } from "@weave-mui/material";
 import { selectVariants, tabAlignment, tabVariant } from "@weave-mui/enums";
-import { FigmaCtaArrowRight } from "./BillingIcons.jsx";
-import AccountSearchField, { SearchFilterBar } from "./AccountSearchField.jsx";
+import { FigmaCtaArrowRight } from "../BillingIcons.jsx";
+import AccountSearchField, { SearchFilterBar } from "../AccountSearchField.jsx";
 import {
   PS_AUTODESK_TYPE_FILTERS,
   PS_MARKETPLACE_TYPE_FILTERS,
   PS_PRODUCTS,
   PS_SORT_OPTIONS,
   PS_TABS,
-  RECENTLY_PURCHASED,
-} from "./data.js";
-import AccountShell from "./AccountShell.jsx";
-import BundleCard from "./BundleCard.jsx";
-import OrgApprovedSolutions from "./OrgApprovedSolutions.jsx";
-import ExploreMoreSolutions from "./ExploreMoreSolutions.jsx";
-import ProductCarousel from "./ProductCarousel.jsx";
-import ProductDetail from "./ProductDetail.jsx";
-import { resolveCatalogProduct } from "./detailConfig.js";
-import AddCustomIntegration from "./AddCustomIntegration.jsx";
-import WorkflowRecommendations from "./WorkflowRecommendations.jsx";
-import { FONT, PAGE_X, useAccountTheme } from "./useAccountTheme.js";
-import { VIS_D } from "./visdTokens.js";
+} from "../data.js";
+import AccountShell from "../AccountShell.jsx";
+import { USER_ACCOUNT_NAV } from "../data.js";
+import OrgApprovedSolutions from "../OrgApprovedSolutions.jsx";
+import ExploreMoreSolutions from "../ExploreMoreSolutions.jsx";
+import ProductCarousel from "../ProductCarousel.jsx";
+import ProductDetail from "../ProductDetail.jsx";
+import { resolveCatalogProduct } from "../detailConfig.js";
+import AddCustomIntegration from "../AddCustomIntegration.jsx";
+import WorkflowRecommendations from "../WorkflowRecommendations.jsx";
+import { FONT, PAGE_X, useAccountTheme } from "../useAccountTheme.js";
+import { VIS_D } from "../visdTokens.js";
 
 const sectionTitleSx = {
   ...VIS_D.typography.sectionTitle,
@@ -317,7 +316,7 @@ function EmptyState({ title, body }) {
   );
 }
 
-export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
+export default function ProductsServices({ onNavigate }) {
   const theme = useAccountTheme();
   const [tab, setTab] = useState("all");
   const [query, setQuery] = useState("");
@@ -369,15 +368,6 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
     setToast(`View details — ${product.name}`);
   };
 
-  const handleBundleAppDetails = (app) => {
-    const product = PS_PRODUCTS.find((item) => item.id === app.id);
-    if (product) {
-      handleViewDetails(product);
-      return;
-    }
-    setToast(`View details — ${app.name}`);
-  };
-
   const handleViewOrgApproved = () => {
     setSelectedProduct(null);
     setDetailSource("my-products");
@@ -410,8 +400,22 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleAccountNavigate = (route) => {
+    if (route === "billing-and-orders") {
+      setToast("Billing and orders");
+      return;
+    }
+    onNavigate?.(route);
+  };
+
   return (
-    <AccountShell theme={theme} activeNav="Products & solutions" onNavigate={onNavigate} toast={toast} navItems={navItems}>
+    <AccountShell
+      theme={theme}
+      activeNav="Products & solutions"
+      onNavigate={handleAccountNavigate}
+      toast={toast}
+      navItems={USER_ACCOUNT_NAV}
+    >
         {/* Content */}
         <Box sx={{ px: PAGE_X, pt: "32px", pb: "48px", flex: 1 }}>
           {!selectedProduct && !addIntegrationOpen ? (
@@ -436,6 +440,7 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
             <ProductDetail
               product={selectedProduct}
               detailSource={detailSource}
+              isUserView
               onBack={() => {
                 if (detailSource === "org-approved" || detailSource === "explore-more" || detailSource === "workflow") {
                   setTab("org-approved");
@@ -447,8 +452,6 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
               onViewAllApps={handleViewAllApps}
               onViewDetails={handleViewDetails}
               onViewOrgApproved={handleViewOrgApproved}
-              onViewUser={onViewUser}
-              isUserView={false}
             />
           ) : addIntegrationOpen ? (
             <AddCustomIntegration onCancel={handleCloseAddIntegration} onAction={setToast} />
@@ -482,29 +485,6 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
             </TabList>
 
             <TabPanel value="all" sx={{ p: 0 }}>
-              {/* Recently purchased */}
-              <Box sx={{ mb: "32px" }}>
-                <Box component="h2" sx={sectionTitleSx}>
-                  Recently purchased
-                </Box>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 330px))" },
-                    gap: "19px",
-                  }}
-                >
-                  {RECENTLY_PURCHASED.map((b) => (
-                    <BundleCard
-                      key={b.id}
-                      bundle={b}
-                      onAction={setToast}
-                      onViewDetails={handleBundleAppDetails}
-                    />
-                  ))}
-                </Box>
-              </Box>
-
               <SearchFilterBar sx={{ flexWrap: "wrap", mb: "32px" }}>
                 <AccountSearchField value={query} onChange={(e) => setQuery(e.target.value)} />
               </SearchFilterBar>
@@ -523,6 +503,7 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
                 filterDefaultLabel="All"
                 sort={autodeskSort}
                 onSortChange={(e) => setAutodeskSort(e.target.value)}
+                hideDeployedBadge
               />
               <MyProductsSection
                 title="From the Marketplace"
@@ -538,6 +519,7 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
                 filterDefaultLabel="All"
                 sort={marketplaceSort}
                 onSortChange={(e) => setMarketplaceSort(e.target.value)}
+                hideDeployedBadge
               />
               <MyProductsSection
                 title="Custom integrations"
@@ -550,6 +532,7 @@ export default function ProductsServices({ onNavigate, onViewUser, navItems }) {
                 sort={customIntegrationsSort}
                 onSortChange={(e) => setCustomIntegrationsSort(e.target.value)}
                 alwaysShow
+                hideDeployedBadge
                 hidePrimaryCta
                 headerAction={
                   <Button variant="contained" onClick={handleOpenAddIntegration} sx={addIntegrationBtnSx}>

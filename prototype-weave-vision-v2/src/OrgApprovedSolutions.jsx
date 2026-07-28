@@ -23,6 +23,7 @@ function solutionProduct(id) {
 
 function OrgApprovedSolutionCard({ row, onAction, onViewDetails, ctaLabel = "Get" }) {
   const product = solutionProduct(row.id);
+  const actionLabel = row.ctaLabel ?? ctaLabel;
   const worksWithLabels = product?.worksWith ?? row.worksWith.map(productName);
   const rating = row.rating ?? product?.rating;
   const reviewCount = row.reviewCount ?? product?.reviewCount;
@@ -121,7 +122,7 @@ function OrgApprovedSolutionCard({ row, onAction, onViewDetails, ctaLabel = "Get
 
         <Button
           variant="contained"
-          onClick={() => onAction(`${ctaLabel} — ${row.name}`)}
+          onClick={() => onAction(`${actionLabel} — ${row.name}`)}
           sx={{
             ...VIS_D.typography.label14Semi,
             fontFamily: FONT,
@@ -133,7 +134,7 @@ function OrgApprovedSolutionCard({ row, onAction, onViewDetails, ctaLabel = "Get
             "&:hover": { bgcolor: "#222", boxShadow: "none" },
           }}
         >
-          {ctaLabel}
+          {actionLabel}
         </Button>
       </Box>
 
@@ -254,7 +255,7 @@ function SolutionCarousel({ rows, onAction, onViewDetails, ctaLabel = "Get", vis
                 row={row}
                 onAction={onAction}
                 onViewDetails={onViewDetails}
-                ctaLabel={ctaLabel}
+                ctaLabel={row.ctaLabel ?? ctaLabel}
               />
             </Box>
           ))}
@@ -280,6 +281,9 @@ export default function OrgApprovedSolutions({
   onViewDetails,
   filterProductId,
   title,
+  description: descriptionOverride,
+  ctaLabel = "Get",
+  rowsOverride = null,
   layout = "grid",
   onViewMore,
 }) {
@@ -310,6 +314,10 @@ export default function OrgApprovedSolutions({
   };
 
   const rows = useMemo(() => {
+    if (rowsOverride) {
+      return rowsOverride;
+    }
+
     let list = filterProductId
       ? ORG_APPROVED_SOLUTIONS.filter((s) => s.worksWith.includes(filterProductId))
       : ORG_APPROVED_SOLUTIONS;
@@ -333,7 +341,7 @@ export default function OrgApprovedSolutions({
     }
 
     return list;
-  }, [filterProductId, isCarousel, query, types, sort]);
+  }, [rowsOverride, filterProductId, isCarousel, query, types, sort]);
 
   const heading =
     title ??
@@ -341,9 +349,11 @@ export default function OrgApprovedSolutions({
       ? `Approved solutions for ${productName(filterProductId)}`
       : "Company-approved solutions");
 
-  const description = filterProductId
-    ? `Your company has approved these solutions for ${productName(filterProductId)}. Get or buy licenses, then assign and deploy them to users on your team.`
-    : "Your company has approved these solutions. Get or buy licenses, then assign and deploy them to users on your team.";
+  const description =
+    descriptionOverride ??
+    (filterProductId
+      ? `Your company has approved these solutions for ${productName(filterProductId)}. Get or buy licenses, then assign and deploy them to users on your team.`
+      : "Your company has approved these solutions. Get or buy licenses, then assign and deploy them to users on your team.");
 
   return (
     <Box>
@@ -441,7 +451,12 @@ export default function OrgApprovedSolutions({
         </Typography>
       ) : isCarousel ? (
         <>
-          <SolutionCarousel rows={rows} onAction={onAction} onViewDetails={onViewDetails} />
+          <SolutionCarousel
+            rows={rows}
+            onAction={onAction}
+            onViewDetails={onViewDetails}
+            ctaLabel={ctaLabel}
+          />
           <Box sx={{ display: "flex", justifyContent: "flex-start", mt: "24px" }}>
             <Button
               variant="outlined"
@@ -468,7 +483,13 @@ export default function OrgApprovedSolutions({
           }}
         >
           {rows.map((row) => (
-            <OrgApprovedSolutionCard key={row.id} row={row} onAction={onAction} onViewDetails={onViewDetails} />
+            <OrgApprovedSolutionCard
+              key={row.id}
+              row={row}
+              onAction={onAction}
+              onViewDetails={onViewDetails}
+              ctaLabel={row.ctaLabel ?? ctaLabel}
+            />
           ))}
         </Box>
       )}

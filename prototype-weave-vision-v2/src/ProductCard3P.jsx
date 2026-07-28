@@ -92,11 +92,11 @@ function ContentTypeBadge({ category }) {
   );
 }
 
-export default function ProductCard3P({ product, onAction, onViewDetails }) {
+export default function ProductCard3P({ product, onAction, onViewDetails, hideDeployedBadge = false, hidePrimaryCta = false }) {
   const isSplit = product.variant === "split";
   const cta = cardCta(product);
   const isProduct = product.category === "products";
-  const showDeployedBadge = !isProduct && product.orgStatus === "Deployed";
+  const showDeployedBadge = !hideDeployedBadge && !isProduct && product.orgStatus === "Deployed";
   const showCornerBadges = product.isAutodesk || showDeployedBadge;
 
   return (
@@ -190,7 +190,7 @@ export default function ProductCard3P({ product, onAction, onViewDetails }) {
             </Box>
           )}
 
-          {isSplit ? (
+          {hidePrimaryCta ? null : isSplit ? (
             <ButtonGroup kind={buttonGroupKind.SPLIT} fullWidth>
               <Button variant="contained" onClick={() => onAction(`${cta} — ${product.name}`)} sx={primaryBtnSx}>
                 {cta}

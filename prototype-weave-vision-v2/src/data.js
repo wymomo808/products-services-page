@@ -21,6 +21,15 @@ export const ACCOUNT_NAV = [
   "Settings",
 ];
 
+export const USER_ACCOUNT_NAV = [
+  "Home",
+  "Products & solutions",
+  "Billing and orders",
+  "Reporting",
+  "Support",
+  "Settings",
+];
+
 export const PAGE_TABS = [
   { id: "all", label: "My products & solutions" },
   { id: "updates", label: "Product Updates" },
@@ -373,6 +382,9 @@ export const EXPLORE_MORE_SOLUTIONS = [
   },
 ];
 
+/** User view: AutoCAD solutions already assigned to the signed-in user. */
+export const USER_AUTOCAD_OWNED_SOLUTION_IDS = ["plot-publisher", "dwg-markup-sync", "cad-assistant"];
+
 // Multi-select type filter for the org-approved solutions grid.
 export const ORG_TYPE_FILTERS = [
   { id: "all", label: "All solutions" },
@@ -395,13 +407,27 @@ export const PS_TYPE_FILTERS = [
   { id: "templates", label: "Templates" },
 ];
 
+export const PS_AUTODESK_TYPE_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "products", label: "Products" },
+  { id: "agents", label: "Agents" },
+];
+
+export const PS_MARKETPLACE_TYPE_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "apps", label: "Apps" },
+  { id: "agents", label: "Agents" },
+  { id: "skills", label: "Skills" },
+  { id: "templates", label: "Templates" },
+];
+
 // Sort options for the "My products & solutions" grid.
 export const PS_SORT_OPTIONS = [
   { id: "latest", label: "Latest" },
   { id: "alphabetical", label: "Alphabetical" },
 ];
 
-// Recently purchased bundles: an Autodesk product + a 3rd-party app bought with it.
+// Recently purchased bundles: an Autodesk product + one or more 3rd-party apps bought with it.
 // One cloud deployment, one desktop.
 export const RECENTLY_PURCHASED = [
   {
@@ -411,9 +437,10 @@ export const RECENTLY_PURCHASED = [
     cta: "Access",
     product: { name: "Fusion 360", logo: "./logos/fusion360.png" },
     app: {
+      id: "cam-assistant",
       name: "CAM Assistant",
       tint: "#FF6A00",
-      vendor: "Autodesk validated partner",
+      vendor: "Marketplace",
     },
   },
   {
@@ -422,11 +449,20 @@ export const RECENTLY_PURCHASED = [
     purchasedOn: "Jun 18, 2026",
     cta: "Download",
     product: { name: "AutoCAD", logo: "./logos/autocad.png" },
-    app: {
-      name: "DWG Markup Sync",
-      tint: "#0696D7",
-      vendor: "Marketplace",
-    },
+    apps: [
+      {
+        id: "dwg-markup-sync",
+        name: "DWG Markup Sync",
+        tint: "#0696D7",
+        vendor: "Marketplace",
+      },
+      {
+        id: "plot-publisher",
+        name: "AutoCAD Plot Publisher",
+        tint: "#FF6A00",
+        vendor: "Marketplace",
+      },
+    ],
   },
 ];
 
@@ -513,6 +549,19 @@ const PS_SOLUTIONS = [
     orgStatus: "Deployed",
     assignedUsers: 120,
     cta: "Download",
+    variant: "single",
+  },
+  {
+    id: "cam-assistant",
+    name: "CAM Assistant",
+    category: "apps",
+    tint: "#FF6A00",
+    vendor: "Marketplace",
+    worksWith: ["Fusion 360"],
+    description: "AI-assisted CAM workflows and toolpath suggestions for Fusion 360.",
+    orgStatus: "Deployed",
+    assignedUsers: 12,
+    cta: "Access",
     variant: "single",
   },
   {
@@ -787,6 +836,109 @@ export const PS_PRODUCTS = [
   ...PS_SOLUTIONS,
 ];
 
+/** Solutions from My products that work with the given Autodesk product. */
+export function getRelatedMyProductsSolutions(product) {
+  const matchKeys = new Set(
+    [product.id, product.name]
+      .filter(Boolean)
+      .map((value) => value.toLowerCase()),
+  );
+
+  return PS_PRODUCTS.filter(
+    (item) =>
+      item.id !== product.id &&
+      item.category !== "products" &&
+      (item.worksWith || []).some((label) =>
+        label
+          .split(/,\s*/)
+          .map((part) => part.trim().toLowerCase())
+          .some((part) => matchKeys.has(part)),
+      ),
+  );
+}
+
+export function getUserAutocadOwnedSolutions() {
+  return USER_AUTOCAD_OWNED_SOLUTION_IDS.map((id) => PS_PRODUCTS.find((product) => product.id === id)).filter(Boolean);
+}
+
+/** User discover carousel on AutoCAD detail — solutions not yet assigned, with mixed CTAs. */
+export function getUserAutocadDiscoverSolutions() {
+  const ownedIds = new Set(USER_AUTOCAD_OWNED_SOLUTION_IDS);
+
+  const withSeat = (id) => {
+    const solution = ORG_APPROVED_SOLUTIONS.find((item) => item.id === id);
+    return solution && !ownedIds.has(solution.id) ? { ...solution, ctaLabel: "Request seat" } : null;
+  };
+
+  const withApproval = (id) => {
+    const solution = EXPLORE_MORE_SOLUTIONS.find((item) => item.id === id);
+    return solution && !ownedIds.has(solution.id) ? { ...solution, ctaLabel: "Request approval" } : null;
+  };
+
+  const leading = [
+    withSeat("layer-standard-sync"),
+    withApproval("pdf-redline-bridge"),
+    withSeat("xref-manager"),
+  ].filter(Boolean);
+
+  const usedIds = new Set([...ownedIds, ...leading.map((item) => item.id)]);
+
+  const restApproved = ORG_APPROVED_SOLUTIONS.filter(
+    (solution) => solution.worksWith.includes("autocad") && !usedIds.has(solution.id),
+  ).map((solution) => ({
+    ...solution,
+    ctaLabel: "Request seat",
+  }));
+
+  const restUnapproved = EXPLORE_MORE_SOLUTIONS.filter(
+    (solution) => solution.worksWith.includes("autocad") && !usedIds.has(solution.id),
+  ).map((solution) => ({
+    ...solution,
+    ctaLabel: "Request approval",
+  }));
+
+  return [...leading, ...restApproved, ...restUnapproved];
+}
+
+/** Admin discover carousel on AutoCAD detail — solutions to procure or approve, with mixed CTAs. */
+export function getAdminAutocadDiscoverSolutions() {
+  const ownedIds = new Set(USER_AUTOCAD_OWNED_SOLUTION_IDS);
+
+  const withBuy = (id) => {
+    const solution = ORG_APPROVED_SOLUTIONS.find((item) => item.id === id);
+    return solution && !ownedIds.has(solution.id) ? { ...solution, ctaLabel: "Buy" } : null;
+  };
+
+  const withApproval = (id) => {
+    const solution = EXPLORE_MORE_SOLUTIONS.find((item) => item.id === id);
+    return solution && !ownedIds.has(solution.id) ? { ...solution, ctaLabel: "Request approval" } : null;
+  };
+
+  const leading = [
+    withBuy("layer-standard-sync"),
+    withApproval("pdf-redline-bridge"),
+    withBuy("xref-manager"),
+  ].filter(Boolean);
+
+  const usedIds = new Set([...ownedIds, ...leading.map((item) => item.id)]);
+
+  const restApproved = ORG_APPROVED_SOLUTIONS.filter(
+    (solution) => solution.worksWith.includes("autocad") && !usedIds.has(solution.id),
+  ).map((solution) => ({
+    ...solution,
+    ctaLabel: "Buy",
+  }));
+
+  const restUnapproved = EXPLORE_MORE_SOLUTIONS.filter(
+    (solution) => solution.worksWith.includes("autocad") && !usedIds.has(solution.id),
+  ).map((solution) => ({
+    ...solution,
+    ctaLabel: "Request approval",
+  }));
+
+  return [...leading, ...restApproved, ...restUnapproved];
+}
+
 // AutoCAD product detail — Figma node 632:336612 (years per research brief).
 export const AUTOCAD_DETAIL = {
   years: ["2026", "2025", "2024", "2023"],
@@ -850,6 +1002,33 @@ export const AUTOCAD_DETAIL = {
       { id: "upd-2", name: "AutoCAD {year} Hotfix 2", date: "Jul 14, 2025", size: "18.22 MB" },
     ],
   },
+  purchase: {
+    date: "Jan 12, 2024",
+    seats: "120 seats",
+    totalPrice: "$18,000 / year",
+  },
+  subscriptionExpiry: {
+    daysRemaining: 42,
+  },
+  subscriptionSummary: {
+    subscriptionId: "77291038456102",
+    team: "TS Organization",
+    term: "1 year",
+    autoRenew: "On",
+    expiresOn: "Mar 15, 2027",
+  },
+  updateStatus: {
+    installedVersion: "2025.1",
+    latestVersion: "2025.2",
+    latestReleaseDate: "Jul 14, 2025",
+    updateAvailable: true,
+    pendingUpdates: 2,
+  },
+  assignment: {
+    totalSeats: 120,
+    assignedUsers: Array.from({ length: 98 }, (_, index) => ({ id: `acad-u${index + 1}` })),
+  },
+  availableSeats: 22,
 };
 
 // AutoCAD Plot Publisher detail — Figma node 26165:103370 (sections below success banner).
@@ -908,6 +1087,23 @@ export const PLOT_PUBLISHER_DETAIL = {
     date: "Aug 7, 2025",
     seats: "20 seats",
     totalPrice: "$500 / month",
+  },
+  subscriptionExpiry: {
+    daysRemaining: 15,
+  },
+  subscriptionSummary: {
+    subscriptionId: "88492014567204",
+    team: "TS Organization",
+    term: "1 year",
+    autoRenew: "On",
+    expiresOn: "Oct 5, 2027",
+  },
+  updateStatus: {
+    installedVersion: "2026.1",
+    latestVersion: "2026.2",
+    latestReleaseDate: "Jul 22, 2026",
+    updateAvailable: true,
+    pendingUpdates: 2,
   },
   assignment: {
     totalSeats: 20,
@@ -1542,6 +1738,26 @@ export const UM_USER_DETAILS = {
     unassignedCount: 32,
   },
 };
+
+export function getUserDetail(user) {
+  if (UM_USER_DETAILS[user.id]) {
+    return UM_USER_DETAILS[user.id];
+  }
+
+  const userIndex = UM_USERS.findIndex((entry) => entry.id === user.id);
+  const displayNumber = String(Math.max(userIndex + 1, 1)).padStart(2, "0");
+  const autodeskId = user.email.split("@")[0];
+
+  return {
+    displayName: `${displayNumber}-${user.name}`,
+    groups: UM_USER_DETAILS.u1.groups,
+    autodeskId,
+    addedToTeam: "March 15, 2022",
+    assignedProducts: UM_ASSIGNED,
+    unassignedProducts: UM_UNASSIGNED_STUB,
+    unassignedCount: 32,
+  };
+}
 
 // --- Billing and orders (Subscription Hub VisD) ---
 export const BO_TABS = [

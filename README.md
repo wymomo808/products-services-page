@@ -32,6 +32,7 @@ Built to match production `manage.autodesk.com/products/all`: black global heade
 | Prototype (Round 1) | `prototype-all-products-solutions.html` |
 | **V1 — Capability Control Center** | `prototype-capability-control-center.html` |
 | V2 — Capability Control Center (duplicate) | `prototype-capability-control-center-v2.html` *(after first V2 build)* |
+| V2 prototype guide (wiki) | `prototype-capability-control-center-v2-guide.html` |
 | Assets (Round 1) | `assets/weave-app/` |
 | Assets (V1) | `assets/weave-vision-app/` |
 | Assets (V2) | `assets/weave-vision-v2-app/` *(after first V2 build)* |

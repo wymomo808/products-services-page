@@ -16,7 +16,7 @@ import { AlertS } from "@weave-mui/icons-weave";
 import AssignmentRowActions from "./AssignmentRowActions.jsx";
 import AccountSearchField from "./AccountSearchField.jsx";
 import ProductLockup from "./ProductLockup.jsx";
-import { UM_PRODUCT_TYPE_FILTERS, UM_USER_DETAILS } from "./data.js";
+import { getUserDetail, UM_PRODUCT_TYPE_FILTERS } from "./data.js";
 import { FONT } from "./useAccountTheme.js";
 import { VIS_D } from "./visdTokens.js";
 
@@ -170,7 +170,7 @@ function ProductRow({ product, onAction }) {
 }
 
 export default function UserDetail({ user, onBack, onAction }) {
-  const detail = UM_USER_DETAILS[user.id];
+  const detail = getUserDetail(user);
   const [assignmentTab, setAssignmentTab] = useState("assigned");
   const [types, setTypes] = useState(["all"]);
   const [query, setQuery] = useState("");

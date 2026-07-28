@@ -21,9 +21,16 @@ const viewMoreButtonSx = {
 
 export default function ExploreMoreSolutions({ onAction, onViewDetails, onViewMore }) {
   return (
-    <Box component="section">
+    <Box
+      component="section"
+      sx={{
+        mt: "48px",
+        pt: "32px",
+        borderTop: `3px solid ${VIS_D.colors.accent}`,
+      }}
+    >
       <Box component="h2" sx={{ ...VIS_D.typography.sectionTitle, fontFamily: FONT, fontWeight: 800, mb: "8px" }}>
-        Explore more solutions
+        Explore more solutions from the Marketplace
       </Box>
       <Typography sx={{ ...VIS_D.typography.bodyMedium, fontFamily: FONT, color: VIS_D.colors.textPrimary, mb: "24px" }}>
         These solutions are not approved for your company yet. Request approval to submit them for review. Once approved,
@@ -48,12 +55,12 @@ export default function ExploreMoreSolutions({ onAction, onViewDetails, onViewMo
               onViewMore();
               return;
             }
-            onAction("View more — explore solutions");
+            onAction("View all solutions");
           }}
           sx={viewMoreButtonSx}
           endIcon={<FigmaCtaArrowRight size={20} />}
         >
-          View more
+          View all solutions
         </Button>
       </Box>
     </Box>

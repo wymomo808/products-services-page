@@ -1,7 +1,8 @@
 import { Box, Button, Divider, Link, Typography } from "@weave-mui/material";
-import { FigmaCtaArrowRight } from "./BillingIcons.jsx";
 import ProductLockup from "./ProductLockup.jsx";
 import { VIS_D } from "./visdTokens.js";
+
+const FONT = VIS_D.font.element;
 
 const primaryBtnSx = {
   ...VIS_D.typography.label16Semi,
@@ -14,8 +15,18 @@ const primaryBtnSx = {
   "&:hover": { bgcolor: "#222222", boxShadow: "none" },
 };
 
-/** A "purchased together" bundle: an Autodesk product + a related 3rd-party app. */
-export default function BundleCard({ bundle, onAction }) {
+/** A "purchased together" bundle: an Autodesk product + related 3rd-party app(s). */
+export default function BundleCard({ bundle, onAction, onViewDetails }) {
+  const bundledApps = bundle.apps ?? (bundle.app ? [bundle.app] : []);
+
+  const handleAppClick = (app) => {
+    if (app.id && onViewDetails) {
+      onViewDetails(app);
+      return;
+    }
+    onAction(`View details — ${app.name}`);
+  };
+
   return (
     <Box
       sx={{
@@ -52,12 +63,33 @@ export default function BundleCard({ bundle, onAction }) {
           <Divider sx={{ flex: 1, borderColor: VIS_D.colors.rowDivider }} />
         </Box>
 
-        {/* 3rd-party app — secondary */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <ProductLockup tint={bundle.app.tint} name={bundle.app.name} size={22} nameSize={14} nameWeight={700} />
-          <Typography sx={{ ...VIS_D.typography.smallprint, color: VIS_D.colors.textLight }}>
-            · {bundle.app.vendor}
-          </Typography>
+        {/* 3rd-party app(s) — secondary */}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {bundledApps.map((app) => (
+            <Box key={app.id ?? app.name} sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Link
+                component="button"
+                underline="hover"
+                onClick={() => handleAppClick(app)}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  flex: 1,
+                  minWidth: 0,
+                  p: 0,
+                  color: VIS_D.colors.ink,
+                  fontFamily: FONT,
+                  textAlign: "left",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <ProductLockup tint={app.tint} name={app.name} size={22} nameSize={14} nameWeight={700} />
+              </Link>
+              <Typography sx={{ ...VIS_D.typography.smallprint, color: VIS_D.colors.textLight, flexShrink: 0 }}>
+                · {app.vendor}
+              </Typography>
+            </Box>
+          ))}
         </Box>
 
         {/* primary CTA */}
@@ -71,25 +103,6 @@ export default function BundleCard({ bundle, onAction }) {
             {bundle.cta}
           </Button>
         )}
-      </Box>
-
-      {/* footer */}
-      <Box sx={{ px: "24px", pb: "24px" }}>
-        <Divider sx={{ borderColor: VIS_D.colors.rowDivider, mb: "12px" }} />
-        <Link
-          component="button"
-          underline="none"
-          onClick={() => onAction(`View bundle — ${bundle.product.name}`)}
-          sx={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-        >
-          <FigmaCtaArrowRight size={20} />
-          <Typography
-            component="span"
-            sx={{ fontFamily: VIS_D.font.element, fontSize: "16px", fontWeight: 400, color: VIS_D.colors.ink }}
-          >
-            View bundle
-          </Typography>
-        </Link>
       </Box>
     </Box>
   );

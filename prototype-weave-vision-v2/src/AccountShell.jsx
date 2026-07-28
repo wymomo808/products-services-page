@@ -32,7 +32,7 @@ const NAV_ROUTES = {
   "Billing and orders": "billing-and-orders",
 };
 
-export default function AccountShell({ theme, activeNav, onNavigate, children, toast }) {
+export default function AccountShell({ theme, activeNav, onNavigate, children, toast, navItems = ACCOUNT_NAV }) {
   if (!theme) {
     return (
       <Box sx={{ p: 4, fontFamily: FONT }}>
@@ -86,7 +86,7 @@ export default function AccountShell({ theme, activeNav, onNavigate, children, t
           >
             Account
           </Typography>
-          {ACCOUNT_NAV.map((item) => {
+          {(navItems ?? ACCOUNT_NAV).map((item) => {
             const active = item === activeNav;
             const route = NAV_ROUTES[item];
             return (

@@ -168,13 +168,15 @@ function FaqItem({ item, expanded, onToggle }) {
 export default function MarketplaceListingDetail({
   product,
   listing = PLOT_PUBLISHER_LISTING,
+  primaryCtaLabel = "Get",
   onBack,
   onAction,
   backLabel = "Back to org-approved solutions",
 }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [openFaq, setOpenFaq] = useState(null);
-  const totalReviews = Object.values(listing.ratings.distribution).reduce((sum, n) => sum + n, 0);
+  const totalReviews = Object.values(listing.ratings?.distribution ?? {}).reduce((sum, n) => sum + n, 0);
+  const averageRating = Number(listing.ratings?.average ?? listing.rating ?? 0);
 
   const scrollToSection = (sectionId) => {
     setActiveTab(sectionId);
@@ -250,8 +252,8 @@ export default function MarketplaceListingDetail({
               {listing.priceCadence}
             </Typography>
           </Typography>
-          <Button variant="contained" onClick={() => onAction(`Get — ${product.name}`)} sx={primaryBtnSx}>
-            Get
+          <Button variant="contained" onClick={() => onAction(`${primaryCtaLabel} — ${product.name}`)} sx={primaryBtnSx}>
+            {primaryCtaLabel}
           </Button>
         </Box>
       </Box>
@@ -395,11 +397,11 @@ export default function MarketplaceListingDetail({
         >
           <Box>
             <Typography sx={{ fontFamily: FONT, fontSize: "48px", fontWeight: 800, lineHeight: 1, mb: "8px" }}>
-              {listing.ratings.average.toFixed(1)}
+              {averageRating.toFixed(1)}
             </Typography>
-            <StarRating rating={listing.ratings.average} reviewCount={listing.reviewCount} />
+            <StarRating rating={averageRating} reviewCount={listing.reviewCount} />
             <Box sx={{ mt: "20px" }}>
-              <RatingBars distribution={listing.ratings.distribution} total={totalReviews} />
+              <RatingBars distribution={listing.ratings?.distribution ?? {}} total={totalReviews} />
             </Box>
             <Box sx={{ mt: "24px" }}>
               <Typography sx={{ ...VIS_D.typography.label16Semi, fontFamily: FONT, fontWeight: 700, mb: "8px" }}>

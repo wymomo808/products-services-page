@@ -24,7 +24,6 @@ import {
   UM_TABS,
   UM_TEAMS,
   UM_TOTAL_USERS,
-  UM_USER_DETAILS,
   UM_USERS,
 } from "./data.js";
 import { FONT, PAGE_X, useAccountTheme } from "./useAccountTheme.js";
@@ -100,7 +99,7 @@ function ProductIcons({ products, moreProducts }) {
   );
 }
 
-export default function UserManagement({ onNavigate }) {
+export default function UserManagement({ onNavigate, initialUserId = null, onInitialUserConsumed }) {
   const theme = useAccountTheme();
   const [tab, setTab] = useState("by-user");
   const [team, setTeam] = useState(UM_TEAMS[0].id);
@@ -115,6 +114,16 @@ export default function UserManagement({ onNavigate }) {
     return () => window.clearTimeout(timer);
   }, [toast]);
 
+  useEffect(() => {
+    if (!initialUserId) return;
+    const user = UM_USERS.find((entry) => entry.id === initialUserId);
+    if (user) {
+      setSelectedUser(user);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    onInitialUserConsumed?.();
+  }, [initialUserId, onInitialUserConsumed]);
+
   const users = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return UM_USERS;
@@ -122,7 +131,7 @@ export default function UserManagement({ onNavigate }) {
       (user) =>
         user.name.toLowerCase().includes(q) ||
         user.email.toLowerCase().includes(q) ||
-        user.role.toLowerCase().includes(q)
+        user.role.toLowerCase().includes(q),
     );
   }, [query]);
 
@@ -147,298 +156,304 @@ export default function UserManagement({ onNavigate }) {
   };
 
   const openUserDetail = (user) => {
-    if (UM_USER_DETAILS[user.id]) {
-      setSelectedUser(user);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setToast(`View ${user.name}`);
-    }
+    setSelectedUser(user);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <AccountShell theme={theme} activeNav="User Management" onNavigate={onNavigate} toast={toast}>
+    <AccountShell
+      theme={theme}
+      activeNav="User Management"
+      onNavigate={onNavigate}
+      toast={toast}
+      navItems={[
+        "Home",
+        "Products & solutions",
+        "User Management",
+        "Billing and orders",
+        "Reporting",
+        "Support",
+        "Settings",
+      ]}
+    >
       <Box sx={{ px: PAGE_X, pt: "32px", pb: "48px", flex: 1 }}>
         {selectedUser ? (
-          <UserDetail
-            user={selectedUser}
-            onBack={() => setSelectedUser(null)}
-            onAction={setToast}
-          />
+          <UserDetail user={selectedUser} onBack={() => setSelectedUser(null)} onAction={setToast} />
         ) : (
           <>
-        <Typography
-          component="h1"
-          sx={{ ...VIS_D.typography.pageTitle, fontSize: "28px", fontWeight: 700, mb: "16px" }}
-        >
-          User Management
-        </Typography>
+            <Typography
+              component="h1"
+              sx={{ ...VIS_D.typography.pageTitle, fontSize: "28px", fontWeight: 700, mb: "16px" }}
+            >
+              User Management
+            </Typography>
 
-        <TabContext value={tab}>
-          <TabList
-            onChange={(_event, value) => setTab(value)}
-            variant={tabVariant.STANDARD}
-            align={tabAlignment.LEFT}
-            showAddButton={false}
-            aria-label="User management views"
-            sx={tabListSx}
-          >
-            {UM_TABS.map((item) => (
-              <Tab key={item.id} label={item.label} value={item.id} />
-            ))}
-          </TabList>
+            <TabContext value={tab}>
+              <TabList
+                onChange={(_event, value) => setTab(value)}
+                variant={tabVariant.STANDARD}
+                align={tabAlignment.LEFT}
+                showAddButton={false}
+                aria-label="User management views"
+                sx={tabListSx}
+              >
+                {UM_TABS.map((item) => (
+                  <Tab key={item.id} label={item.label} value={item.id} />
+                ))}
+              </TabList>
 
-          {UM_TABS.map((item) => (
-            <TabPanel key={item.id} value={item.id} sx={{ p: 0 }}>
-              {item.id === "by-user" ? (
-                <>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      mb: "24px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Typography sx={{ ...VIS_D.typography.label14Semi, color: VIS_D.colors.ink }}>
-                      Team
-                    </Typography>
-                    <Select
-                      value={team}
-                      onChange={(event) => setTeam(event.target.value)}
-                      variant={selectVariants.OUTLINED}
-                      IconComponent={CaretDownS}
-                      sx={{
-                        minWidth: 220,
-                        height: VIS_D.sizes.fieldHeight,
-                        ...VIS_D.typography.bodySmall,
-                        "& .MuiOutlinedInput-notchedOutline": { borderColor: VIS_D.colors.border },
-                        "& .MuiSelect-select": { py: "8px" },
-                      }}
-                    >
-                      {UM_TEAMS.map((entry) => (
-                        <MenuItem key={entry.id} value={entry.id}>
-                          {entry.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <Link
-                      component="button"
-                      underline="hover"
-                      onClick={() => setToast("Team settings")}
-                      sx={{
-                        ...VIS_D.typography.label14Semi,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        ml: "4px",
-                      }}
-                    >
+              {UM_TABS.map((item) => (
+                <TabPanel key={item.id} value={item.id} sx={{ p: 0 }}>
+                  {item.id === "by-user" ? (
+                    <>
                       <Box
                         sx={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: "50%",
-                          border: `1px solid ${VIS_D.colors.border}`,
-                          display: "inline-flex",
+                          display: "flex",
                           alignItems: "center",
-                          justifyContent: "center",
+                          gap: "12px",
+                          mb: "24px",
+                          flexWrap: "wrap",
                         }}
                       >
-                        <SettingsS sx={{ width: 14, height: 14 }} />
-                      </Box>
-                      Team settings
-                    </Link>
-                  </Box>
-
-                  <SearchFilterBar>
-                    <AccountSearchField value={query} onChange={(event) => setQuery(event.target.value)} />
-                    <FilterBarButton
-                      startIcon={<FilterS sx={{ width: 16, height: 16 }} />}
-                      onClick={() => setToast("Filter")}
-                    >
-                      Filter
-                    </FilterBarButton>
-                  </SearchFilterBar>
-
-                  <Box
-                    sx={{
-                      border: `1px solid ${VIS_D.colors.border}`,
-                      borderRadius: `${VIS_D.radius.card}px`,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: 2,
-                        bgcolor: VIS_D.colors.panel,
-                        px: "24px",
-                        py: "16px",
-                        borderBottom: `1px solid ${VIS_D.colors.border}`,
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <Typography sx={{ ...VIS_D.typography.headlineSmall, fontSize: "18px" }}>
-                        Users ({UM_TOTAL_USERS})
-                      </Typography>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                        <Button
-                          variant="contained"
-                          onClick={() => setToast("Invite users")}
+                        <Typography sx={{ ...VIS_D.typography.label14Semi, color: VIS_D.colors.ink }}>
+                          Team
+                        </Typography>
+                        <Select
+                          value={team}
+                          onChange={(event) => setTeam(event.target.value)}
+                          variant={selectVariants.OUTLINED}
+                          IconComponent={CaretDownS}
                           sx={{
-                            ...VIS_D.typography.label14Semi,
-                            textTransform: "none",
-                            borderRadius: `${VIS_D.radius.button}px`,
-                            height: 36,
-                            px: "16px",
+                            minWidth: 220,
+                            height: VIS_D.sizes.fieldHeight,
+                            ...VIS_D.typography.bodySmall,
+                            "& .MuiOutlinedInput-notchedOutline": { borderColor: VIS_D.colors.border },
+                            "& .MuiSelect-select": { py: "8px" },
                           }}
                         >
-                          Invite users
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          onClick={() => setToast("Change role with CSV")}
-                          sx={outlinedButtonSx}
+                          {UM_TEAMS.map((entry) => (
+                            <MenuItem key={entry.id} value={entry.id}>
+                              {entry.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Link
+                          component="button"
+                          underline="hover"
+                          onClick={() => setToast("Team settings")}
+                          sx={{
+                            ...VIS_D.typography.label14Semi,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            ml: "4px",
+                          }}
                         >
-                          Change role with CSV
-                        </Button>
-                        <Button variant="outlined" onClick={() => setToast("Export")} sx={outlinedButtonSx}>
-                          Export
-                        </Button>
-                        <Box sx={{ width: "1px", height: 24, bgcolor: VIS_D.colors.border, mx: "4px" }} />
-                        <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
-                          {selected.size} selected
-                        </Typography>
-                        <Button
-                          variant="outlined"
-                          disabled={selected.size === 0}
-                          onClick={() => setToast(`Remove ${selected.size} user(s)`)}
-                          sx={outlinedButtonSx}
-                        >
-                          Remove users
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          disabled={selected.size === 0}
-                          onClick={() => setToast(`Change role for ${selected.size} user(s)`)}
-                          sx={outlinedButtonSx}
-                        >
-                          Change role
-                        </Button>
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: "50%",
+                              border: `1px solid ${VIS_D.colors.border}`,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <SettingsS sx={{ width: 14, height: 14 }} />
+                          </Box>
+                          Team settings
+                        </Link>
                       </Box>
-                    </Box>
 
-                    <Box
-                      role="row"
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: GRID_COLS,
-                        alignItems: "center",
-                        px: "24px",
-                        py: "12px",
-                        borderBottom: `1px solid ${VIS_D.colors.border}`,
-                      }}
-                    >
-                      <Checkbox
-                        checked={allSelected}
-                        indeterminate={someSelected}
-                        onChange={toggleAll}
-                        aria-label="Select all users"
-                        sx={{ p: 0, ml: "-2px" }}
-                      />
-                      {["Name", "Role", "Account status", "Products assigned", ""].map((heading, index) => (
-                        <Typography
-                          key={heading || `col-${index}`}
-                          sx={{ ...VIS_D.typography.label14Semi, color: VIS_D.colors.ink }}
+                      <SearchFilterBar>
+                        <AccountSearchField value={query} onChange={(event) => setQuery(event.target.value)} />
+                        <FilterBarButton
+                          startIcon={<FilterS sx={{ width: 16, height: 16 }} />}
+                          onClick={() => setToast("Filter")}
                         >
-                          {heading}
-                        </Typography>
-                      ))}
-                    </Box>
+                          Filter
+                        </FilterBarButton>
+                      </SearchFilterBar>
 
-                    {users.map((user) => (
                       <Box
-                        key={user.id}
-                        role="row"
                         sx={{
-                          display: "grid",
-                          gridTemplateColumns: GRID_COLS,
-                          alignItems: "center",
-                          px: "24px",
-                          py: "16px",
-                          borderBottom: `1px solid ${VIS_D.colors.rowDivider}`,
-                          "&:last-of-type": { borderBottom: "none" },
-                          bgcolor: selected.has(user.id) ? "rgba(95,96,255,0.04)" : "transparent",
+                          border: `1px solid ${VIS_D.colors.border}`,
+                          borderRadius: `${VIS_D.radius.card}px`,
+                          overflow: "hidden",
                         }}
                       >
-                        <Checkbox
-                          checked={selected.has(user.id)}
-                          onChange={() => toggleOne(user.id)}
-                          aria-label={`Select ${user.name}`}
-                          sx={{ p: 0, ml: "-2px" }}
-                        />
-                        <Box sx={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
-                          <Avatar sx={{ width: 40, height: 40, bgcolor: "#BDBDBD", fontSize: "14px", flexShrink: 0 }}>
-                            {initials(user.name)}
-                          </Avatar>
-                          <Box sx={{ minWidth: 0 }}>
-                            <Typography
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 2,
+                            bgcolor: VIS_D.colors.panel,
+                            px: "24px",
+                            py: "16px",
+                            borderBottom: `1px solid ${VIS_D.colors.border}`,
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <Typography sx={{ ...VIS_D.typography.headlineSmall, fontSize: "18px" }}>
+                            Users ({UM_TOTAL_USERS})
+                          </Typography>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                            <Button
+                              variant="contained"
+                              onClick={() => setToast("Invite users")}
                               sx={{
                                 ...VIS_D.typography.label14Semi,
-                                fontWeight: 700,
-                                color: VIS_D.colors.ink,
+                                textTransform: "none",
+                                borderRadius: `${VIS_D.radius.button}px`,
+                                height: 36,
+                                px: "16px",
                               }}
                             >
-                              {user.name}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                ...VIS_D.typography.bodySmall,
-                                color: VIS_D.colors.textLight,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
+                              Invite users
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              onClick={() => setToast("Change role with CSV")}
+                              sx={outlinedButtonSx}
                             >
-                              {user.email}
+                              Change role with CSV
+                            </Button>
+                            <Button variant="outlined" onClick={() => setToast("Export")} sx={outlinedButtonSx}>
+                              Export
+                            </Button>
+                            <Box sx={{ width: "1px", height: 24, bgcolor: VIS_D.colors.border, mx: "4px" }} />
+                            <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
+                              {selected.size} selected
                             </Typography>
+                            <Button
+                              variant="outlined"
+                              disabled={selected.size === 0}
+                              onClick={() => setToast(`Remove ${selected.size} user(s)`)}
+                              sx={outlinedButtonSx}
+                            >
+                              Remove users
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              disabled={selected.size === 0}
+                              onClick={() => setToast(`Change role for ${selected.size} user(s)`)}
+                              sx={outlinedButtonSx}
+                            >
+                              Change role
+                            </Button>
                           </Box>
                         </Box>
-                        <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
-                          {user.role}
-                        </Typography>
-                        <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
-                          {user.status}
-                        </Typography>
-                        <ProductIcons products={user.products} moreProducts={user.moreProducts} />
-                        <IconButton
-                          aria-label={`View ${user.name}`}
-                          size="small"
-                          onClick={() => openUserDetail(user)}
-                          sx={{ justifySelf: "end" }}
+
+                        <Box
+                          role="row"
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: GRID_COLS,
+                            alignItems: "center",
+                            px: "24px",
+                            py: "12px",
+                            borderBottom: `1px solid ${VIS_D.colors.border}`,
+                          }}
                         >
-                          <CtaArrowRightS sx={{ width: 16, height: 16 }} />
-                        </IconButton>
+                          <Checkbox
+                            checked={allSelected}
+                            indeterminate={someSelected}
+                            onChange={toggleAll}
+                            aria-label="Select all users"
+                            sx={{ p: 0, ml: "-2px" }}
+                          />
+                          {["Name", "Role", "Account status", "Products assigned", ""].map((heading, index) => (
+                            <Typography
+                              key={heading || `col-${index}`}
+                              sx={{ ...VIS_D.typography.label14Semi, color: VIS_D.colors.ink }}
+                            >
+                              {heading}
+                            </Typography>
+                          ))}
+                        </Box>
+
+                        {users.map((user) => (
+                          <Box
+                            key={user.id}
+                            role="row"
+                            sx={{
+                              display: "grid",
+                              gridTemplateColumns: GRID_COLS,
+                              alignItems: "center",
+                              px: "24px",
+                              py: "16px",
+                              borderBottom: `1px solid ${VIS_D.colors.rowDivider}`,
+                              "&:last-of-type": { borderBottom: "none" },
+                              bgcolor: selected.has(user.id) ? "rgba(95,96,255,0.04)" : "transparent",
+                            }}
+                          >
+                            <Checkbox
+                              checked={selected.has(user.id)}
+                              onChange={() => toggleOne(user.id)}
+                              aria-label={`Select ${user.name}`}
+                              sx={{ p: 0, ml: "-2px" }}
+                            />
+                            <Box sx={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
+                              <Avatar sx={{ width: 40, height: 40, bgcolor: "#BDBDBD", fontSize: "14px", flexShrink: 0 }}>
+                                {initials(user.name)}
+                              </Avatar>
+                              <Box sx={{ minWidth: 0 }}>
+                                <Typography
+                                  sx={{
+                                    ...VIS_D.typography.label14Semi,
+                                    fontWeight: 700,
+                                    color: VIS_D.colors.ink,
+                                  }}
+                                >
+                                  {user.name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    ...VIS_D.typography.bodySmall,
+                                    color: VIS_D.colors.textLight,
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {user.email}
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
+                              {user.role}
+                            </Typography>
+                            <Typography sx={{ ...VIS_D.typography.bodySmall, color: VIS_D.colors.textLight }}>
+                              {user.status}
+                            </Typography>
+                            <ProductIcons products={user.products} moreProducts={user.moreProducts} />
+                            <IconButton
+                              aria-label={`View ${user.name}`}
+                              size="small"
+                              onClick={() => openUserDetail(user)}
+                              sx={{ justifySelf: "end" }}
+                            >
+                              <CtaArrowRightS sx={{ width: 16, height: 16 }} />
+                            </IconButton>
+                          </Box>
+                        ))}
                       </Box>
-                    ))}
-                  </Box>
-                </>
-              ) : (
-                <Box sx={{ py: "64px", textAlign: "center" }}>
-                  <Typography sx={{ ...VIS_D.typography.headlineSmall, fontSize: "18px", mb: "8px" }}>
-                    {item.label}
-                  </Typography>
-                  <Typography sx={{ ...VIS_D.typography.bodyMedium, color: VIS_D.colors.textPrimary }}>
-                    {item.label} content (prototype placeholder).
-                  </Typography>
-                </Box>
-              )}
-            </TabPanel>
-          ))}
-        </TabContext>
+                    </>
+                  ) : (
+                    <Box sx={{ py: "64px", textAlign: "center" }}>
+                      <Typography sx={{ ...VIS_D.typography.headlineSmall, fontSize: "18px", mb: "8px" }}>
+                        {item.label}
+                      </Typography>
+                      <Typography sx={{ ...VIS_D.typography.bodyMedium, color: VIS_D.colors.textPrimary }}>
+                        {item.label} content (prototype placeholder).
+                      </Typography>
+                    </Box>
+                  )}
+                </TabPanel>
+              ))}
+            </TabContext>
           </>
         )}
       </Box>

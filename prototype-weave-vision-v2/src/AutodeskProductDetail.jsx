@@ -13,8 +13,9 @@ import {
 import { buttonGroupKind, selectVariants } from "@weave-mui/enums";
 import { CaretDownS } from "@weave-mui/icons-weave";
 import { FigmaCtaArrowRight } from "./BillingIcons.jsx";
-import { AUTOCAD_DETAIL } from "./data.js";
-import OrgApprovedSolutions from "./OrgApprovedSolutions.jsx";
+import { AUTOCAD_DETAIL, getAdminAutocadDiscoverSolutions, getRelatedMyProductsSolutions, getUserAutocadDiscoverSolutions, getUserAutocadOwnedSolutions } from "./data.js";
+import { DiscoverAutocadSolutionsSection, YourAutocadSolutionsSection } from "./AutocadSolutionsSections.jsx";
+import AppManagementSummary from "./AppManagementSummary.jsx";
 import ProductLockup from "./ProductLockup.jsx";
 import { VIS_D } from "./visdTokens.js";
 
@@ -247,15 +248,34 @@ function DownloadsTable({ rows, onAction }) {
   );
 }
 
-export default function AutodeskProductDetail({ product, onBack, onAction, onViewOrgApproved }) {
-  const [year, setYear] = useState(AUTOCAD_DETAIL.defaultYear);
-  const [platform, setPlatform] = useState(AUTOCAD_DETAIL.defaultPlatform);
-  const [language, setLanguage] = useState(AUTOCAD_DETAIL.defaultLanguage);
-  const [category, setCategory] = useState(AUTOCAD_DETAIL.defaultCategory);
+export default function AutodeskProductDetail({
+  product,
+  detail = AUTOCAD_DETAIL,
+  onBack,
+  onAction,
+  onViewDetails,
+  onViewOrgApproved,
+  isUserView = false,
+}) {
+  const [year, setYear] = useState(detail.defaultYear);
+  const [platform, setPlatform] = useState(detail.defaultPlatform);
+  const [language, setLanguage] = useState(detail.defaultLanguage);
+  const [category, setCategory] = useState(detail.defaultCategory);
 
-  const activeCategory = AUTOCAD_DETAIL.downloadCategories.find((c) => c.id === category);
+  const relatedSolutions = useMemo(() => {
+    if (isUserView && product.id === "autocad") {
+      return getUserAutocadOwnedSolutions();
+    }
+    return getRelatedMyProductsSolutions(product);
+  }, [isUserView, product]);
+  const autocadDiscoverRows = useMemo(() => {
+    if (product.id !== "autocad") return null;
+    return isUserView ? getUserAutocadDiscoverSolutions() : getAdminAutocadDiscoverSolutions();
+  }, [isUserView, product.id]);
+
+  const activeCategory = detail.downloadCategories.find((c) => c.id === category);
   const downloads = useMemo(() => {
-    const items = AUTOCAD_DETAIL.downloadsByCategory[category] || [];
+    const items = detail.downloadsByCategory[category] || [];
     return items.map((item) => ({
       ...item,
       name: item.name.replace("{year}", year),
@@ -265,15 +285,24 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
   const countLabel = `${downloads.length} ${activeCategory?.label ?? "Items"} available for download`;
 
   return (
-    <Box>
-      {/* Product header — Figma deprecated/header */}
-      <IconButton
-        aria-label="Back to my products & solutions"
+    <Box sx={{ display: "flex", flexDirection: "column", gap: "36px" }}>
+      <Link
+        component="button"
+        underline="none"
         onClick={onBack}
-        sx={{ mb: "24px", color: VIS_D.colors.ink, p: 0 }}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          color: VIS_D.colors.ink,
+          ...VIS_D.typography.bodySmall,
+          fontFamily: FONT,
+          alignSelf: "flex-start",
+        }}
       >
-        <FigmaCtaArrowRight size={24} sx={{ transform: "rotate(180deg)" }} />
-      </IconButton>
+        <FigmaCtaArrowRight size={20} sx={{ transform: "rotate(180deg)" }} />
+        Back to my products & solutions
+      </Link>
 
       <Box
         sx={{
@@ -281,7 +310,6 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
           flexWrap: "wrap",
           justifyContent: "space-between",
           gap: "24px",
-          mb: "32px",
         }}
       >
         <Box sx={{ flex: 1, minWidth: 280, maxWidth: 640 }}>
@@ -305,6 +333,28 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
         </Box>
       </Box>
 
+      <Box sx={{ mb: "32px" }}>
+        {isUserView ? (
+          <AppManagementSummary
+            updatesOnly
+            updateStatus={detail.updateStatus}
+            onViewUpdates={() => onAction("View updates")}
+          />
+        ) : (
+          <AppManagementSummary
+            purchase={detail.purchase}
+            subscriptionSummary={detail.subscriptionSummary}
+            subscriptionExpiry={detail.subscriptionExpiry}
+            updateStatus={detail.updateStatus}
+            assignment={detail.assignment}
+            availableSeats={detail.availableSeats}
+            onViewSubscription={() => onAction("View subscription")}
+            onAssignUsers={() => onAction("Assign users")}
+            onViewUpdates={() => onAction("View updates")}
+          />
+        )}
+      </Box>
+
       {/* Version + downloads card */}
       <Box
         sx={{
@@ -314,7 +364,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
           overflow: "hidden",
         }}
       >
-        <YearTabs years={AUTOCAD_DETAIL.years} value={year} onChange={setYear} />
+        <YearTabs years={detail.years} value={year} onChange={setYear} />
 
         <Box sx={{ p: "16px" }}>
           <Box
@@ -342,7 +392,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
                 sx={underlinedFieldSx}
                 MenuProps={{ PaperProps: { sx: { mt: "4px" } } }}
               >
-                {AUTOCAD_DETAIL.platforms.map((p) => (
+                {detail.platforms.map((p) => (
                   <MenuItem key={p} value={p}>
                     {p}
                   </MenuItem>
@@ -365,7 +415,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
                 sx={underlinedFieldSx}
                 MenuProps={{ PaperProps: { sx: { mt: "4px" } } }}
               >
-                {AUTOCAD_DETAIL.languages.map((lang) => (
+                {detail.languages.map((lang) => (
                   <MenuItem key={lang} value={lang}>
                     {lang}
                   </MenuItem>
@@ -387,7 +437,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
             <ButtonGroup kind={buttonGroupKind.SPLIT} sx={{ width: 241, maxWidth: "100%" }}>
               <Button
                 variant="contained"
-                onClick={() => onAction(`Install — AutoCAD ${year}`)}
+                onClick={() => onAction(`Install — ${product.name} ${year}`)}
                 sx={{
                   ...VIS_D.typography.label14Semi,
                   fontFamily: FONT,
@@ -405,7 +455,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
               <Button
                 variant="contained"
                 aria-label="More install options"
-                onClick={() => onAction(`Install options — AutoCAD ${year}`)}
+                onClick={() => onAction(`Install options — ${product.name} ${year}`)}
                 sx={{
                   height: 32,
                   minWidth: 34,
@@ -439,7 +489,7 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
           >
             <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px" }}>
               <SegmentedControl
-                options={AUTOCAD_DETAIL.downloadCategories}
+                options={detail.downloadCategories}
                 value={category}
                 onChange={setCategory}
               />
@@ -465,28 +515,23 @@ export default function AutodeskProductDetail({ product, onBack, onAction, onVie
         </Box>
       </Box>
 
-      <Box sx={{ mt: "40px" }}>
-        <OrgApprovedSolutions
+      <YourAutocadSolutionsSection
+        products={relatedSolutions}
+        productName={product.name}
+        isUserView={isUserView}
+        onAction={onAction}
+        onViewDetails={onViewDetails}
+      />
+
+      {product.id === "autocad" && autocadDiscoverRows ? (
+        <DiscoverAutocadSolutionsSection
+          rows={autocadDiscoverRows}
+          isUserView={isUserView}
           onAction={onAction}
-          filterProductId={product.id}
-          layout="carousel"
-          onViewMore={onViewOrgApproved}
+          onViewDetails={onViewDetails}
+          onViewOrgApproved={onViewOrgApproved}
         />
-      </Box>
-
-      <Divider sx={{ borderColor: VIS_D.colors.rowDivider, my: "32px" }} />
-
-      <Link
-        component="button"
-        underline="none"
-        onClick={onBack}
-        sx={{ display: "inline-flex", alignItems: "center", gap: "8px", color: VIS_D.colors.ink }}
-      >
-        <FigmaCtaArrowRight size={20} sx={{ transform: "rotate(180deg)" }} />
-        <Typography component="span" sx={{ ...VIS_D.typography.bodySmall, fontFamily: FONT }}>
-          Back to my products & solutions
-        </Typography>
-      </Link>
+      ) : null}
     </Box>
   );
 }

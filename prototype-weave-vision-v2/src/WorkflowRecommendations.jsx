@@ -33,7 +33,7 @@ function WorksWithChip({ label }) {
   );
 }
 
-function WorkflowRecommendationCard({ rec, onAction }) {
+function WorkflowRecommendationCard({ rec, onAction, onViewDetails }) {
   const showSecurityBadge = rec.trust?.includes("Security reviewed");
   const accent = rec.tint ?? VIS_D.colors.accent;
 
@@ -98,7 +98,7 @@ function WorkflowRecommendationCard({ rec, onAction }) {
           </Typography>
           <Button
             variant="contained"
-            onClick={() => onAction(`Get — ${rec.name}`)}
+            onClick={() => onAction(`Buy — ${rec.name}`)}
             sx={{
               ...VIS_D.typography.label14Semi,
               fontFamily: FONT,
@@ -112,17 +112,25 @@ function WorkflowRecommendationCard({ rec, onAction }) {
               "&:hover": { bgcolor: "#222", boxShadow: "none" },
             }}
           >
-            Get
+            Buy
           </Button>
         </Box>
       </Box>
 
-      <CardViewDetailsFooter onClick={() => onAction(`View details — ${rec.name}`)} />
+      <CardViewDetailsFooter
+        onClick={() => {
+          if (onViewDetails) {
+            onViewDetails(rec);
+            return;
+          }
+          onAction(`View details — ${rec.name}`);
+        }}
+      />
     </Box>
   );
 }
 
-export default function WorkflowRecommendations({ onAction }) {
+export default function WorkflowRecommendations({ onAction, onViewDetails }) {
   return (
     <Box component="section" sx={{ mb: "48px" }}>
       <Box sx={{ mb: "24px" }}>
@@ -162,7 +170,7 @@ export default function WorkflowRecommendations({ onAction }) {
         }}
       >
         {WORKFLOW_RECOMMENDATIONS.map((rec) => (
-          <WorkflowRecommendationCard key={rec.id} rec={rec} onAction={onAction} />
+          <WorkflowRecommendationCard key={rec.id} rec={rec} onAction={onAction} onViewDetails={onViewDetails} />
         ))}
       </Box>
     </Box>

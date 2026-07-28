@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capability Control Center V2 — Prototype Guide</title>
+  <link rel="stylesheet" href="assets/ps-brand.css" />
+  <style>
+    code { font-size: 0.85em; background: var(--adsk-charcoal-100); padding: 1px 5px; border-radius: 3px; }
+    pre { background: var(--adsk-charcoal-100); padding: 16px; border-radius: var(--adsk-radius); overflow-x: auto; font-size: 0.78rem; line-height: 1.45; margin: 12px 0; }
+    ul, ol { margin: 8px 0 8px 20px; font-size: 0.88rem; }
+    li { margin: 4px 0; }
+    p { margin: 8px 0; font-size: 0.88rem; color: var(--adsk-charcoal-900); }
+    blockquote { border-left: 3px solid var(--adsk-blue-500); margin: 16px 0; padding: 8px 16px; background: var(--adsk-blue-100); font-size: 0.95rem; }
+    .ps-callout { background: #f4f3ff; border: 1px solid #c8c9ff; border-radius: var(--adsk-radius); padding: 14px 16px; margin: 16px 0; font-size: 0.88rem; }
+    .ps-callout strong { display: block; margin-bottom: 4px; }
+    details { margin: 12px 0; border: 1px solid var(--adsk-charcoal-200); border-radius: var(--adsk-radius); padding: 0 16px 12px; background: #fff; }
+    summary { cursor: pointer; font-weight: 700; padding: 12px 0; font-size: 0.92rem; }
+    .ps-toc { columns: 2; column-gap: 32px; margin: 12px 0 20px; font-size: 0.88rem; }
+    .ps-toc a { color: var(--adsk-blue-600); text-decoration: none; }
+    .ps-toc a:hover { text-decoration: underline; }
+    @media (max-width: 720px) { .ps-toc { columns: 1; } }
+  </style>
+</head>
+<body class="ps-doc">
+  <header class="ps-topbar">
+    <span class="wordmark">AUTODESK</span>
+    <span class="doc-tag">PSET · Prototype V2</span>
+  </header>
+  <main class="ps-shell">
+    <div class="ps-page-header">
+      <h1>Capability Control Center — Prototype Guide (V2)</h1>
+      <p class="subtitle">Context, navigation, and design rationales for the Products &amp; Services vision prototype.</p>
+      <div class="ps-meta-row">
+        <span class="ps-badge accent">V1 click-through</span>
+        <span class="ps-badge">Jul 2026</span>
+        <span class="ps-badge">Feedback welcome</span>
+      </div>
+    </div>
+
+    <div class="ps-card" style="padding: 24px">
+      <div class="ps-callout">
+        <strong>What this is</strong>
+        An interactive vision prototype — not production UI. It communicates a direction for Account → Products &amp; Solutions as a <em>capability control center</em>: fulfillment plus org-approved ecosystem access, with clear admin vs. end-user experiences.
+      </div>
+
+      <p><strong>Open the prototype:</strong> <a class="ps-link" href="prototype-capability-control-center-v2.html">prototype-capability-control-center-v2.html</a></p>
+      <p><strong>Local dev:</strong> <code>cd prototype-weave-vision-v2 && npm run dev</code> → <a class="ps-link" href="http://127.0.0.1:5175/">http://127.0.0.1:5175/</a></p>
+      <p><strong>Switch views:</strong> use the black bar — <code>#admin</code> (Admin view) or <code>#user</code> (User view) in the URL hash.</p>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="toc">On this page</h2>
+      <nav class="ps-toc">
+        <ul>
+          <li><a href="#purpose">Purpose &amp; scope</a></li>
+          <li><a href="#views">Admin vs user view</a></li>
+          <li><a href="#nav">Navigation map</a></li>
+          <li><a href="#tabs">Products &amp; Solutions tabs</a></li>
+          <li><a href="#details">Detail page types</a></li>
+          <li><a href="#features">Key features &amp; rationales</a></li>
+          <li><a href="#paths">Suggested click paths</a></li>
+          <li><a href="#limits">Known limits</a></li>
+          <li><a href="#feedback">Feedback</a></li>
+        </ul>
+      </nav>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="purpose">Purpose &amp; scope</h2>
+      <p>This prototype explores how Products &amp; Solutions could evolve beyond classic download/install fulfillment while preserving the 2021 field-guide guardrails: <strong>help users get to their product faster</strong>, keep subscription/administration on adjacent Account surfaces, and avoid turning P&amp;S into a marketplace junk drawer.</p>
+      <p>V2 specifically tests:</p>
+      <ul>
+        <li>A unified catalog of Autodesk products <em>and</em> org-deployed marketplace solutions</li>
+        <li>Org-approved discovery and workflow-aware recommendations</li>
+        <li>Admin operator tools (seat summary, user management, billing hub) vs. a simplified user workspace</li>
+        <li>Product-contextual cross-sell (e.g. AutoCAD ↔ Plot Publisher solutions)</li>
+      </ul>
+      <p>Related docs: <a class="ps-link" href="aug4-scope-matrix.html">Aug 4 scope matrix</a> · <a class="ps-link" href="ps-existing-journey-map.html">Existing journey map</a> · <a class="ps-link" href="https://autodesk.atlassian.net/wiki/spaces/~wuya/pages/940475072/Products+Services+Experience+Evolution+XD+Hub">XD Hub (Confluence)</a></p>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="views">Admin vs user view</h2>
+      <div class="ps-table-wrap">
+        <table class="ps-table">
+          <thead>
+            <tr><th></th><th>Admin view</th><th>User view</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mental model</strong></td>
+              <td>Operator console — buy, approve, assign, renew, monitor</td>
+              <td>Personal workspace — download, open, install updates</td>
+            </tr>
+            <tr>
+              <td><strong>Account nav</strong></td>
+              <td>Products &amp; solutions, User Management, Billing and orders (+ stubs)</td>
+              <td>Products &amp; solutions, Billing and orders (link only — no page), Reporting, Support, Settings</td>
+            </tr>
+            <tr>
+              <td><strong>Summary cards on detail</strong></td>
+              <td>Updates + Subscription + User assignment (products &amp; deployed solutions)</td>
+              <td>Updates only</td>
+            </tr>
+            <tr>
+              <td><strong>Org-approved CTAs</strong></td>
+              <td>Buy</td>
+              <td>Buy / Request approval / Request seat (contextual)</td>
+            </tr>
+            <tr>
+              <td><strong>User Management</strong></td>
+              <td>Full list → 01-Bat Man-style user detail for every user</td>
+              <td>Not in nav</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="nav">Navigation map</h2>
+      <div class="ps-table-wrap">
+        <table class="ps-table">
+          <thead><tr><th>Where</th><th>What you can do</th><th>Prototype fidelity</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Products &amp; solutions</strong></td><td>Main catalog, tabs, detail pages, org-approved discovery</td><td>High — primary click-through surface</td></tr>
+            <tr><td><strong>User Management</strong> (admin)</td><td>User list, invite/export stubs, user detail with assigned products</td><td>Medium — list + detail template wired</td></tr>
+            <tr><td><strong>Billing and orders</strong> (admin)</td><td>Summary, subscriptions table, marketplace subscription cards</td><td>Medium — summary + subscriptions tab; other tabs placeholder</td></tr>
+            <tr><td><strong>Billing and orders</strong> (user)</td><td>Nav link only (toast — page intentionally omitted)</td><td>Low — signals IA without building user billing</td></tr>
+            <tr><td><strong>Home, Reporting, Support, Settings</strong></td><td>Nav labels only</td><td>Stub</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="tabs">Products &amp; Solutions tabs</h2>
+      <details open>
+        <summary>My products &amp; solutions (default)</summary>
+        <p>The landing view. Three catalog sections:</p>
+        <ul>
+          <li><strong>From Autodesk</strong> — core products (AutoCAD, Revit, Fusion, Inventor) with install/download CTAs</li>
+          <li><strong>From Marketplace</strong> — deployed apps, agents, skills, templates; filterable by type</li>
+          <li><strong>Custom integrations</strong> — customer-built connectors; <em>View details</em> link only (no detail page by design)</li>
+        </ul>
+        <p>Also includes <strong>Workflow recommendations</strong> (contextual discovery) at the bottom of the tab.</p>
+      </details>
+      <details>
+        <summary>Org-approved solutions</summary>
+        <p>Curated grid/carousel of solutions approved for the org. Admin CTAs use <strong>Buy</strong>. Undeployed items open a <em>marketplace listing</em> detail page. Already-deployed items open the <em>app management</em> detail page (same as My products).</p>
+        <p>Below the grid: <strong>Explore more solutions from the Marketplace</strong> — purple divider section for net-new discovery with <strong>Request approval</strong> CTAs.</p>
+      </details>
+      <details>
+        <summary>Other tabs (Product updates, Custom install, …)</summary>
+        <p>Placeholder tabs preserved for IA parity with production Account. Content not built in this prototype.</p>
+      </details>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="details">Detail page types</h2>
+      <div class="ps-table-wrap">
+        <table class="ps-table">
+          <thead><tr><th>Type</th><th>When</th><th>Template</th><th>Back link</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Autodesk product</strong></td>
+              <td>AutoCAD, Revit, Fusion, Inventor from catalog</td>
+              <td>Version/year tabs, downloads table, summary cards, optional AutoCAD cross-sell sections</td>
+              <td>Back to my products &amp; solutions</td>
+            </tr>
+            <tr>
+              <td><strong>Deployed solution (app)</strong></td>
+              <td>Plot Publisher, Model Checker, etc. from My products or deployed org-approved</td>
+              <td>Summary cards, downloads, user guide link; AutoCAD cross-sell if applicable</td>
+              <td>Back to my products &amp; solutions</td>
+            </tr>
+            <tr>
+              <td><strong>Marketplace listing</strong></td>
+              <td>Org-approved / explore / workflow items not yet deployed</td>
+              <td>Hero, overview, ratings, FAQs, Buy or Request approval CTA</td>
+              <td>Back to org-approved solutions</td>
+            </tr>
+            <tr>
+              <td><strong>User detail</strong> (admin)</td>
+              <td>Any user from User Management</td>
+              <td>01-Bat Man template — profile, groups, assigned/unassigned products</td>
+              <td>Back to users</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="features">Key features &amp; rationales</h2>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">Management summary cards</h3>
+      <p>On product and deployed-solution detail pages, three cards summarize operational status at a glance:</p>
+      <ul>
+        <li><strong>Updates</strong> — installed vs latest version; answers “does my team need a patch?”</li>
+        <li><strong>Subscription</strong> — seats, term, expiry; links out to billing (admin job stays on Billing &amp; orders)</li>
+        <li><strong>User assignment</strong> — seat utilization bar (admin only); assign-users table/modal intentionally removed from solution pages in V2</li>
+      </ul>
+      <p><em>Rationale:</em> Admins need a control-panel read without leaving fulfillment context; users only need update status for their own install workflow.</p>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">Org-approved solutions + Explore more</h3>
+      <p>Separates <strong>approved-for-org</strong> solutions (buy/deploy) from <strong>net-new marketplace</strong> discovery (request approval). Purple marketplace divider visually distinguishes ecosystem discovery from the org catalog panel.</p>
+      <p><em>Rationale:</em> Avoids collapsing “what we already approved” with “what we might approve” — different jobs, different trust signals.</p>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">Workflow recommendations</h3>
+      <p>Cards surfaced on My products based on demo org context (AEC, BIM Manager, owned products). Each links to a listing detail page.</p>
+      <p><em>Rationale:</em> Tests Phase 1 vision for contextual discovery beyond static grid sort — without replacing the catalog.</p>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">AutoCAD cross-sell sections</h3>
+      <p>On AutoCAD and AutoCAD-adjacent solution pages: <strong>Your AutoCAD solutions</strong> (owned/assigned) and <strong>Discover more solutions for AutoCAD</strong> (org-approved or request flows).</p>
+      <p><em>Rationale:</em> Product-contextual ecosystem access — extensions that help a specific product work better, not account-wide marketplace browse.</p>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">Custom integrations</h3>
+      <p>Cards show in catalog; <strong>Add custom integration</strong> opens a step-1 flow stub. View details shows a toast — no detail page.</p>
+      <p><em>Rationale:</em> Signals admin-led connector setup without implying full fulfillment detail parity with marketplace apps.</p>
+
+      <h3 class="ps-section-title" style="font-size:0.92rem;margin-top:20px">Billing and orders (Subscription Hub VisD)</h3>
+      <p>Admin-only full page: upcoming modules, subscription summary cards (including marketplace apps), subscriptions/contracts table. Subscription row drill-down arrows removed — list view only in prototype.</p>
+      <p><em>Rationale:</em> Billing is an adjacent Account job (field guide off-surface for seat/subscription admin on P&amp;S); prototype shows the handoff surface, not deep subscription detail pages.</p>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="paths">Suggested click paths</h2>
+      <p>Use these paths in reviews or stakeholder walkthroughs:</p>
+      <ol>
+        <li><strong>Admin fulfillment:</strong> Admin view → AutoCAD → summary cards → downloads → Your AutoCAD solutions carousel → another solution</li>
+        <li><strong>Admin ecosystem:</strong> Org-approved tab → Plot Publisher (Buy listing) vs Model Checker (deployed app detail) → Explore more → Request approval</li>
+        <li><strong>Admin operations:</strong> User Management → any user → assigned products → back → Billing and orders → Subscriptions tab</li>
+        <li><strong>User workspace:</strong> User view → DWG Markup Sync → updates card only → download section</li>
+        <li><strong>Discovery:</strong> My products → Workflow recommendations → listing detail → back</li>
+      </ol>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="limits">Known limits (intentional)</h2>
+      <ul>
+        <li>Most CTAs show toasts — no real commerce, assignment, or install flows</li>
+        <li>Data is representative demo content, not live entitlements</li>
+        <li>Custom integrations and user billing pages are deliberately shallow</li>
+        <li>Secondary P&amp;S tabs and most Billing tabs are placeholders</li>
+        <li>Assign-users section removed from solution detail pages; summary card remains for admin</li>
+      </ul>
+
+      <hr style="border:none;border-top:1px solid var(--adsk-charcoal-200);margin:24px 0" />
+
+      <h2 class="ps-section-title" id="feedback">Feedback</h2>
+      <p>This is <strong>V1</strong> of the vision prototype — feedback is welcome. Useful questions:</p>
+      <ul>
+        <li>Does the admin vs user split feel right?</li>
+        <li>Is org-approved vs explore-more discovery clear?</li>
+        <li>Do summary cards belong on fulfillment detail pages, or push too much admin into P&amp;S?</li>
+        <li>What’s missing for you to evaluate the direction?</li>
+      </ul>
+      <p>Contact: Yanci Wu · <a class="ps-link" href="https://autodesk.atlassian.net/wiki/spaces/~wuya/pages/940475072/Products+Services+Experience+Evolution+XD+Hub">Products &amp; Services XD Hub</a></p>
+    </div>
+
+    <p class="ps-footer">
+      Autodesk internal · PSET Experience Design ·
+      <a class="ps-link" href="prototype-capability-control-center-v2.html">Open prototype</a> ·
+      <a class="ps-link" href="aug4-scope-matrix.html">Scope matrix</a>
+    </p>
+  </main>
+</body>
+</html>
