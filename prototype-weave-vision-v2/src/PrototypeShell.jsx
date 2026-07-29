@@ -60,7 +60,7 @@ export default function PrototypeShell() {
           welcome.{" "}
           <Box
             component="a"
-            href="prototype-capability-control-center-v2-guide.html"
+            href="https://autodesk.atlassian.net/wiki/spaces/~wuya/pages/1031599257/Products+Services+Vision+V1+Prototype+Guide+WIP"
             target="_blank"
             rel="noopener noreferrer"
             sx={{
