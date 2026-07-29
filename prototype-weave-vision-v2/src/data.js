@@ -24,6 +24,7 @@ export const ACCOUNT_NAV = [
 export const USER_ACCOUNT_NAV = [
   "Home",
   "Products & solutions",
+  "User Management",
   "Billing and orders",
   "Reporting",
   "Support",

@@ -16,7 +16,7 @@ export default function ProductDetail({
   onViewUser,
   isUserView = false,
 }) {
-  const view = resolveDetailView(product, detailSource);
+  const view = resolveDetailView(product, detailSource, isUserView);
 
   if (view.type === "autodesk") {
     return (

@@ -32,7 +32,15 @@ const NAV_ROUTES = {
   "Billing and orders": "billing-and-orders",
 };
 
-export default function AccountShell({ theme, activeNav, onNavigate, children, toast, navItems = ACCOUNT_NAV }) {
+export default function AccountShell({
+  theme,
+  activeNav,
+  onNavigate,
+  children,
+  toast,
+  navItems = ACCOUNT_NAV,
+  disabledNavItems = [],
+}) {
   if (!theme) {
     return (
       <Box sx={{ p: 4, fontFamily: FONT }}>
@@ -89,12 +97,18 @@ export default function AccountShell({ theme, activeNav, onNavigate, children, t
           {(navItems ?? ACCOUNT_NAV).map((item) => {
             const active = item === activeNav;
             const route = NAV_ROUTES[item];
+            const disabled = disabledNavItems.includes(item);
             return (
               <Box
                 key={item}
-                component="a"
-                href="#"
+                component={disabled ? "span" : "a"}
+                href={disabled ? undefined : "#"}
+                aria-disabled={disabled ? true : undefined}
                 onClick={(event) => {
+                  if (disabled) {
+                    event.preventDefault();
+                    return;
+                  }
                   event.preventDefault();
                   if (route && onNavigate) onNavigate(route);
                 }}
@@ -107,9 +121,12 @@ export default function AccountShell({ theme, activeNav, onNavigate, children, t
                   whiteSpace: "nowrap",
                   display: "flex",
                   alignItems: "center",
+                  cursor: disabled ? "default" : "pointer",
                   bgcolor: active ? VIS_D.colors.navActive : "transparent",
                   borderTop: active ? "3px solid #fff" : "3px solid transparent",
-                  "&:hover": { bgcolor: active ? VIS_D.colors.navActive : "rgba(255,255,255,0.08)" },
+                  "&:hover": disabled
+                    ? {}
+                    : { bgcolor: active ? VIS_D.colors.navActive : "rgba(255,255,255,0.08)" },
                 }}
               >
                 {item}

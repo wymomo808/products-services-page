@@ -306,7 +306,7 @@ export function buildMarketplaceListing(product, detailSource = "org-approved") 
   };
 }
 
-export function resolveDetailView(product, detailSource = "my-products") {
+export function resolveDetailView(product, detailSource = "my-products", isUserView = false) {
   const isAutodeskProduct = product.category === "products" && product.isAutodesk;
   const catalogProduct = PS_PRODUCTS.find((item) => item.id === product.id);
   const isDeployedSolution = catalogProduct?.orgStatus === "Deployed" && !isAutodeskProduct;
@@ -330,7 +330,11 @@ export function resolveDetailView(product, detailSource = "my-products") {
 
   if (detailSource === "org-approved" || detailSource === "explore-more" || detailSource === "workflow") {
     const listingCta =
-      detailSource === "explore-more" || detailSource === "workflow" ? "Request approval" : "Buy";
+      detailSource === "explore-more" || detailSource === "workflow"
+        ? "Request approval"
+        : isUserView
+          ? "Request seat"
+          : "Buy";
 
     return {
       type: "marketplace-listing",

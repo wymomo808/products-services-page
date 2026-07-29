@@ -415,6 +415,7 @@ export default function ProductsServices({ onNavigate }) {
       onNavigate={handleAccountNavigate}
       toast={toast}
       navItems={USER_ACCOUNT_NAV}
+      disabledNavItems={["User Management"]}
     >
         {/* Content */}
         <Box sx={{ px: PAGE_X, pt: "32px", pb: "48px", flex: 1 }}>
@@ -559,12 +560,13 @@ export default function ProductsServices({ onNavigate }) {
               <WorkflowRecommendations
                 onAction={setToast}
                 onViewDetails={(product) => handleViewDetails(product, "workflow")}
+                ctaLabel="Request seat"
               />
               <Box sx={{ mt: "48px" }}>
                 <OrgApprovedSolutions
                   onAction={setToast}
                   onViewDetails={(product) => handleViewDetails(product, "org-approved")}
-                  ctaLabel="Buy"
+                  ctaLabel="Request seat"
                 />
               </Box>
               <ExploreMoreSolutions
