@@ -1,6 +1,5 @@
-import { Box, Button, ButtonGroup, Divider, Link, Typography } from "@weave-mui/material";
-import { buttonGroupKind } from "@weave-mui/enums";
-import { CaretDownS, MoreS } from "@weave-mui/icons-weave";
+import { Box, Button, Divider, Link, Typography } from "@weave-mui/material";
+import { CaretDownS } from "@weave-mui/icons-weave";
 import { FigmaCtaArrowRight } from "./BillingIcons.jsx";
 import AutodeskBadge from "./AutodeskBadge.jsx";
 import ProductLockup from "./ProductLockup.jsx";
@@ -93,7 +92,6 @@ function ContentTypeBadge({ category }) {
 }
 
 export default function ProductCard3P({ product, onAction, onViewDetails, hideDeployedBadge = false, hidePrimaryCta = false }) {
-  const isSplit = product.variant === "split";
   const cta = cardCta(product);
   const isProduct = product.category === "products";
   const showDeployedBadge = !hideDeployedBadge && !isProduct && product.orgStatus === "Deployed";
@@ -190,21 +188,7 @@ export default function ProductCard3P({ product, onAction, onViewDetails, hideDe
             </Box>
           )}
 
-          {hidePrimaryCta ? null : isSplit ? (
-            <ButtonGroup kind={buttonGroupKind.SPLIT} fullWidth>
-              <Button variant="contained" onClick={() => onAction(`${cta} — ${product.name}`)} sx={primaryBtnSx}>
-                {cta}
-              </Button>
-              <Button
-                variant="contained"
-                aria-label={`More options for ${product.name}`}
-                onClick={() => onAction(`More options — ${product.name}`)}
-                sx={{ ...primaryBtnSx, px: "16px", minWidth: 0 }}
-              >
-                <MoreS sx={{ width: 20, height: 20 }} />
-              </Button>
-            </ButtonGroup>
-          ) : (
+          {hidePrimaryCta ? null : (
             <Button variant="contained" fullWidth onClick={() => onAction(`${cta} — ${product.name}`)} sx={primaryBtnSx}>
               {cta}
             </Button>

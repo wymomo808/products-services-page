@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import {
   Box,
   Button,
-  ButtonGroup,
   Divider,
   IconButton,
   Link,
@@ -10,13 +9,14 @@ import {
   Select,
   Typography,
 } from "@weave-mui/material";
-import { buttonGroupKind, selectVariants } from "@weave-mui/enums";
+import { selectVariants } from "@weave-mui/enums";
 import { CaretDownS } from "@weave-mui/icons-weave";
 import { FigmaCtaArrowRight } from "./BillingIcons.jsx";
 import { AUTOCAD_DETAIL, getAdminAutocadDiscoverSolutions, getRelatedMyProductsSolutions, getUserAutocadDiscoverSolutions, getUserAutocadOwnedSolutions } from "./data.js";
 import { DiscoverAutocadSolutionsSection, YourAutocadSolutionsSection } from "./AutocadSolutionsSections.jsx";
 import AppManagementSummary from "./AppManagementSummary.jsx";
 import ProductLockup from "./ProductLockup.jsx";
+import SplitInstallDownloadButton from "./SplitInstallDownloadButton.jsx";
 import { VIS_D } from "./visdTokens.js";
 
 const FONT = VIS_D.font.element;
@@ -434,41 +434,12 @@ export default function AutodeskProductDetail({
               mb: "20px",
             }}
           >
-            <ButtonGroup kind={buttonGroupKind.SPLIT} sx={{ width: 241, maxWidth: "100%" }}>
-              <Button
-                variant="contained"
-                onClick={() => onAction(`Install — ${product.name} ${year}`)}
-                sx={{
-                  ...VIS_D.typography.label14Semi,
-                  fontFamily: FONT,
-                  textTransform: "none",
-                  flex: 1,
-                  height: 32,
-                  bgcolor: VIS_D.colors.ink,
-                  boxShadow: "none",
-                  borderRadius: `${VIS_D.radius.button}px 0 0 ${VIS_D.radius.button}px`,
-                  "&:hover": { bgcolor: "#222", boxShadow: "none" },
-                }}
-              >
-                Install
-              </Button>
-              <Button
-                variant="contained"
-                aria-label="More install options"
-                onClick={() => onAction(`Install options — ${product.name} ${year}`)}
-                sx={{
-                  height: 32,
-                  minWidth: 34,
-                  px: 0,
-                  bgcolor: VIS_D.colors.ink,
-                  boxShadow: "none",
-                  borderRadius: `0 ${VIS_D.radius.button}px ${VIS_D.radius.button}px 0`,
-                  "&:hover": { bgcolor: "#222", boxShadow: "none" },
-                }}
-              >
-                <CaretDownS sx={{ width: 16, height: 16, color: "#fff" }} />
-              </Button>
-            </ButtonGroup>
+            <SplitInstallDownloadButton
+              label="Install"
+              onPrimaryClick={() => onAction(`Install — ${product.name} ${year}`)}
+              onMenuClick={() => onAction(`Install options — ${product.name} ${year}`)}
+              menuAriaLabel="More install options"
+            />
 
             <TextLink onClick={() => onAction("License details")}>License details</TextLink>
           </Box>

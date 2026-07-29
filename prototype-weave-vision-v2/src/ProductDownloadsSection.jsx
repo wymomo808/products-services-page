@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import {
   Box,
   Button,
-  ButtonGroup,
   Divider,
   IconButton,
   Link,
@@ -10,8 +9,9 @@ import {
   Select,
   Typography,
 } from "@weave-mui/material";
-import { buttonGroupKind, selectVariants } from "@weave-mui/enums";
+import { selectVariants } from "@weave-mui/enums";
 import { CaretDownS, CaretRightS } from "@weave-mui/icons-weave";
+import SplitInstallDownloadButton from "./SplitInstallDownloadButton.jsx";
 import { VIS_D } from "./visdTokens.js";
 
 const FONT = VIS_D.font.element;
@@ -293,41 +293,13 @@ export default function ProductDownloadsSection({ config, productName, onAction 
           </Select>
         </Box>
 
-        <ButtonGroup kind={buttonGroupKind.SPLIT} sx={{ width: 241, maxWidth: "100%", mb: "12px" }}>
-          <Button
-            variant="contained"
-            onClick={() => onAction(`Download — ${productName} ${year}`)}
-            sx={{
-              ...VIS_D.typography.label14Semi,
-              fontFamily: FONT,
-              textTransform: "none",
-              flex: 1,
-              height: 32,
-              bgcolor: VIS_D.colors.ink,
-              boxShadow: "none",
-              borderRadius: `${VIS_D.radius.button}px 0 0 ${VIS_D.radius.button}px`,
-              "&:hover": { bgcolor: "#222", boxShadow: "none" },
-            }}
-          >
-            Download
-          </Button>
-          <Button
-            variant="contained"
-            aria-label="More download options"
-            onClick={() => onAction(`Download options — ${productName} ${year}`)}
-            sx={{
-              height: 32,
-              minWidth: 34,
-              px: 0,
-              bgcolor: VIS_D.colors.ink,
-              boxShadow: "none",
-              borderRadius: `0 ${VIS_D.radius.button}px ${VIS_D.radius.button}px 0`,
-              "&:hover": { bgcolor: "#222", boxShadow: "none" },
-            }}
-          >
-            <CaretDownS sx={{ width: 16, height: 16, color: "#fff" }} />
-          </Button>
-        </ButtonGroup>
+        <SplitInstallDownloadButton
+          label="Download"
+          onPrimaryClick={() => onAction(`Download — ${productName} ${year}`)}
+          onMenuClick={() => onAction(`Download options — ${productName} ${year}`)}
+          menuAriaLabel="More download options"
+          sx={{ mb: "12px" }}
+        />
 
         <Typography sx={{ ...VIS_D.typography.smallprint, fontFamily: FONT, color: VIS_D.colors.ink, mb: "20px" }}>
           Downloads latest version:{" "}
