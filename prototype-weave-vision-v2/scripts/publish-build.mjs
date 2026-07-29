@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { execSync } from "node:child_process";
 import { fileURLToPath } from "url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,19 @@ copyDir(path.join(publicDir, "logos"), path.join(root, "logos"));
 
 let html = fs.readFileSync(htmlSrc, "utf8");
 html = html.replace(/\.\/assets\//g, "./assets/weave-vision-v2-app/");
+
+let cacheBust = Date.now().toString(36);
+try {
+  cacheBust = execSync("git rev-parse --short HEAD", { cwd: root, encoding: "utf8" }).trim();
+} catch {
+  // Fall back to timestamp when git is unavailable.
+}
+
+html = html.replace(
+  /(\.\/assets\/weave-vision-v2-app\/weave-vision-v2-app\.(?:js|css))(?=["'])/g,
+  `$1?v=${cacheBust}`,
+);
+
 fs.writeFileSync(htmlDest, html);
 fs.rmSync(dist, { recursive: true, force: true });
 
