@@ -6,6 +6,12 @@ Interactive persona journey maps for Products & Solutions fulfillment at `manage
 
 Also mirrored at https://wymomo808.github.io/products-services-page/
 
+**V2 prototype (Capability Control Center):**
+- https://pages.git.autodesk.com/wuya/products-services-page/prototype-capability-control-center-v2.html
+- https://wymomo808.github.io/products-services-page/prototype-capability-control-center-v2.html
+
+Push to **both** remotes for links to stay in sync: `git push origin main && git push autodesk main`
+
 Open `ps-persona-journey-flow.html` locally, or use the GitHub Pages URL above.
 
 ## Evidence prototypes (customer concept tests)
