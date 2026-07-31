@@ -45,7 +45,9 @@ html = html.replace(/\.\/assets\//g, "./assets/weave-vision-v2-app/");
 
 let cacheBust = Date.now().toString(36);
 try {
-  cacheBust = execSync("git rev-parse --short HEAD", { cwd: root, encoding: "utf8" }).trim();
+  const gitSha = execSync("git rev-parse --short HEAD", { cwd: root, encoding: "utf8" }).trim();
+  const dirty = execSync("git status --porcelain", { cwd: root, encoding: "utf8" }).trim();
+  cacheBust = dirty ? `${gitSha}-${Date.now().toString(36)}` : gitSha;
 } catch {
   // Fall back to timestamp when git is unavailable.
 }

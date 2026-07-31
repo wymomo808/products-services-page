@@ -6,6 +6,14 @@ import UserAccountApp from "./user/UserAccountApp.jsx";
 import { FONT } from "./useAccountTheme.js";
 import { VIS_D } from "./visdTokens.js";
 
+const bannerLinkSx = {
+  color: "#fff",
+  fontWeight: 700,
+  textDecoration: "underline",
+  textUnderlineOffset: "3px",
+  "&:hover": { color: "rgba(255,255,255,0.9)" },
+};
+
 function getInitialView() {
   if (typeof window === "undefined") {
     return "admin";
@@ -52,26 +60,29 @@ export default function PrototypeShell() {
             fontFamily: FONT,
             color: "#fff",
             textAlign: "center",
-            maxWidth: 960,
+            maxWidth: 1040,
             mx: "auto",
           }}
         >
-          This prototype is intended to communicate the vision of Products & Services. It&apos;s V1 — feedback is
-          welcome.{" "}
+          V1 vision prototype for Products &amp; Services — feedback welcome. Based on Pattern A in{" "}
+          <Box
+            component="a"
+            href="https://autodesk.atlassian.net/wiki/spaces/~wuya/pages/1033712321/3rd+Party+Solution+Buying+Flows+Company+Patterns"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={bannerLinkSx}
+          >
+            Solution Buying Flows
+          </Box>{" "}
+          View{" "}
           <Box
             component="a"
             href="https://autodesk.atlassian.net/wiki/x/mfR8PQ"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{
-              color: "#fff",
-              fontWeight: 700,
-              textDecoration: "underline",
-              textUnderlineOffset: "3px",
-              "&:hover": { color: "rgba(255,255,255,0.9)" },
-            }}
+            sx={bannerLinkSx}
           >
-            Read the guide
+            Prototype Guide
           </Box>
         </Typography>
       </Box>
